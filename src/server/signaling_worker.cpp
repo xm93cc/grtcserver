@@ -2,11 +2,12 @@
 #include"server/signaling_worker.h"
 #include<rtc_base/logging.h>
 #include<unistd.h>
-
+#include"base/socket.h"
+#include"server/tcp_connection.h"
 namespace grtc
 {
 
-    void signaling_worker_recv_notify (EventLoop* el,IOWatcher* w,int fd, int events,void* data){
+    void signaling_worker_recv_notify (EventLoop* /*el*/,IOWatcher* /*w*/,int fd, int /*events*/,void* data){
         int msg;
         if(read(fd,&msg,sizeof(msg)) != sizeof(int)){
             return;
@@ -66,8 +67,39 @@ namespace grtc
         }
     }
 
+    void SignalingWorker::_read_query(int fd){
+        RTC_LOG(LS_INFO)<< "signaling worker "<< _worker_id << " receive read event, fd: " << fd;
+    }
+
+    void conn_io_cb (EventLoop* /*el*/,IOWatcher* /*w*/,int fd, int events,void* data){
+        SignalingWorker* worker = (SignalingWorker*)data;
+        if(events & EventLoop::READ){
+            worker->_read_query(fd);
+            return;
+        }
+
+    }
+
     void SignalingWorker::_new_conn(int fd){
-        RTC_LOG(LS_INFO) << "conn fd: "<<fd;
+        RTC_LOG(LS_INFO) << "signaling server worker_id : "<< _worker_id<<" conn fd: "<<fd;
+        if(fd < 0){
+            RTC_LOG(LS_WARNING) << "invalid fd:  " << fd;
+            return;
+        }
+        //设置非阻塞
+        sock_setnonblock(fd);
+        ///设置
+        sock_setnodelay(fd);
+        TcpConnection* tcpconn = new TcpConnection(fd);
+        sock_peer_2_str(fd,tcpconn->ip,&(tcpconn->port));
+        tcpconn->io_watcher = _el->create_io_event(conn_io_cb,this);
+        _el->strart_io_event(tcpconn->io_watcher,fd,EventLoop::READ);
+        if((size_t)fd >= _conns.size()){
+            _conns.resize(fd * 2, nullptr);
+        }
+        _conns[fd] = tcpconn;
+
+
     }
 
     int SignalingWorker::notify(int msg){

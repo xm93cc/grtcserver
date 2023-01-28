@@ -149,8 +149,14 @@ base/event_loop.h
 ../src/server/base/event_loop.h
 base/lock_free_queue.h
 ../src/server/base/lock_free_queue.h
+vector
+-
 thread
 -
+
+../src/server/tcp_connection.h
+base/event_loop.h
+../src/server/base/event_loop.h
 
 ../third_party/include/absl/base/attributes.h
 absl/base/config.h
@@ -733,4 +739,16 @@ unistd.h
 -
 server/signaling_worker.h
 /home/ubuntu/devspace/cpp/grtcserver/src/server/server/signaling_worker.h
+
+/home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_worker.cpp
+server/signaling_worker.h
+/home/ubuntu/devspace/cpp/grtcserver/src/server/server/signaling_worker.h
+rtc_base/logging.h
+-
+unistd.h
+-
+base/socket.h
+/home/ubuntu/devspace/cpp/grtcserver/src/server/base/socket.h
+server/tcp_connection.h
+/home/ubuntu/devspace/cpp/grtcserver/src/server/server/tcp_connection.h
 

@@ -3,14 +3,16 @@
 
 #include "base/event_loop.h"
 #include "base/lock_free_queue.h"
+#include<vector>
 #include<thread>
 namespace grtc{
-
+class TcpConnection;
 class SignalingWorker{
     private:
         void _stop();
         void _process_notify(int msg);
         void _new_conn(int fd);
+        void _read_query(int fd);
     
     public:
         enum{
@@ -26,6 +28,7 @@ class SignalingWorker{
         bool start();
         int notify_new_conn(int fd);
         friend void signaling_worker_recv_notify(EventLoop* el,IOWatcher* w,int fd, int events,void* data);
+        friend void conn_io_cb (EventLoop* el,IOWatcher* w,int fd, int events,void* data);
       private:
         int _worker_id;
         EventLoop* _el;
@@ -34,6 +37,7 @@ class SignalingWorker{
         int _notify_recv_fd = -1;
         int _notify_send_fd = -1;
         LockFreeQueue<int> _q_conn;
+        std::vector<TcpConnection*> _conns;
 };
 
 

@@ -17,7 +17,7 @@ namespace grtc
         server->_process_notify(msg); 
     }
 
-    void accept_new_conn(EventLoop *el, IOWatcher *w, int fd, int events, void *data)
+    void accept_new_conn(EventLoop */*el*/, IOWatcher */*w*/, int fd, int /*events*/, void *data)
     {
         int cfd;
         char cip[128];//or IPV6
@@ -187,7 +187,7 @@ namespace grtc
     void SignalingServer::_dispacth_new_conn(int fd){
         int index = _next_worker_index;
         _next_worker_index++;
-        if(_next_worker_index >= _workers.size()){
+        if((size_t)_next_worker_index >= _workers.size()){
             _next_worker_index = 0;
         }
         SignalingWorker* worker = _workers[index];

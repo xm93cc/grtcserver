@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/ubuntu/devspace/cpp/grtcserver/src/main.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/main.cpp.o"
   "/home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_server.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o"
   "/home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_worker.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o"
+  "/home/ubuntu/devspace/cpp/grtcserver/src/server/tcp_connection.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -5,6 +5,9 @@
 namespace grtc{
     int create_tcp_server(const char* host,int port);
     int tcp_accept(int sock, char* host , int* port);
+    int sock_setnonblock(int sock);
+    int sock_setnodelay(int sock);
+    int sock_peer_2_str(int fd,char* host,int* port);
 
 }//namespace grtc
 
