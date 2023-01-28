@@ -1,0 +1,10 @@
+VERBOSE: [000:000][1003154] (src/main.cpp:44): hello word
+VERBOSE: [000:000][1003603] (src/main.cpp:44): hello word
+VERBOSE: [000:000][1004496] (src/main.cpp:44): hello word
+VERBOSE: [000:000][1004826] (src/main.cpp:44): hello word
+VERBOSE: [000:000][1005442] (src/main.cpp:44): hello word
+VERBOSE: [000:000][1006071] (src/main.cpp:44): hello word
+VERBOSE: [000:000][1613365] (src/main.cpp:44): hello word
+INFO: [000:000][1894497] (src/server/signaling_server.cpp:118): signaling server start up .
+INFO: [000:000][1894763] (src/server/signaling_server.cpp:118): signaling server start up .
+INFO: [000:000][2772054] (src/server/signaling_server.cpp:118): signaling server start up .

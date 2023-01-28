@@ -1,0 +1,3 @@
+/home/ubuntu/devspace/cpp/grtcserver/build/CMakeFiles/rebuild_cache.dir
+/home/ubuntu/devspace/cpp/grtcserver/build/CMakeFiles/edit_cache.dir
+/home/ubuntu/devspace/cpp/grtcserver/build/CMakeFiles/grtcserver.dir
