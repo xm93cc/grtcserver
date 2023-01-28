@@ -99,7 +99,7 @@ namespace grtc
     }
 
    int SignalingWorker::notify_new_conn(int fd){
-        _q_conn.produce(&fd);
+        _q_conn.produce(fd);
         return notify(SignalingWorker::NEW_CONN);
    } 
 

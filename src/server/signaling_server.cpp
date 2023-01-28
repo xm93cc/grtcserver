@@ -187,7 +187,7 @@ namespace grtc
     void SignalingServer::_dispacth_new_conn(int fd){
         int index = _next_worker_index;
         _next_worker_index++;
-        if(_next_worker_index > _workers.size()){
+        if(_next_worker_index >= _workers.size()){
             _next_worker_index = 0;
         }
         SignalingWorker* worker = _workers[index];

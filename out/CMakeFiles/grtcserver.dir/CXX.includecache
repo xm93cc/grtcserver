@@ -734,11 +734,3 @@ unistd.h
 server/signaling_worker.h
 /home/ubuntu/devspace/cpp/grtcserver/src/server/server/signaling_worker.h
 
-/home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_worker.cpp
-server/signaling_worker.h
-/home/ubuntu/devspace/cpp/grtcserver/src/server/server/signaling_worker.h
-rtc_base/logging.h
--
-unistd.h
--
-
