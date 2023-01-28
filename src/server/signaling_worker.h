@@ -2,6 +2,7 @@
 #define __SIGNALING_WORKER_H_
 
 #include "base/event_loop.h"
+#include "base/lock_free_queue.h"
 #include<thread>
 namespace grtc{
 
@@ -9,14 +10,17 @@ class SignalingWorker{
     private:
         int _worker_id;
         EventLoop* _el;
-        std::thread* _thread;
+        std::thread* _thread = nullptr;
         IOWatcher* _pipe_watcher = nullptr;
         int _notify_recv_fd = -1;
         int _notify_send_fd = -1;
+        LockFreeQueue<int> _q_conn;
+        
 
     private:
         void _stop();
         void _process_notify(int msg);
+        void _new_conn(int fd);
     
     public:
         enum{

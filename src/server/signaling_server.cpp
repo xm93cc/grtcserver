@@ -132,18 +132,19 @@ namespace grtc
         close(_notify_recv_fd);
         close(_notify_send_fd);
         close(_listen_fd);
-
+        RTC_LOG(LS_INFO)<<"signaling server stop.";    
         for(auto worker : _workers){
             if(worker){
                 worker->stop();
                 worker->join();
             }
         }
-        RTC_LOG(LS_INFO)<<"signaling server stop.";    
+        RTC_LOG(LS_INFO)<<"signaling worker stop deno. "; 
+        
     }
 
     void SignalingServer::stop(){
-        notify(QUIT);
+        notify(SignalingServer::QUIT);
     }
 
     int SignalingServer::notify(int msg){
@@ -162,17 +163,21 @@ namespace grtc
             return false;
         }
         _thread = new std::thread([=](){
-            RTC_LOG(LS_INFO) << "signaling server start up .";
+            RTC_LOG(LS_INFO) << "signaling server event loop run.";
             _el->start();
-            RTC_LOG(LS_INFO) << "signaling server stop.";
+            RTC_LOG(LS_INFO) << "signaling server event loop stop.";
         });
         return true;
     }
 
     int SignalingServer::_create_worker(int worker_id){
-        RTC_LOG(LS_WARNING) << "create signaling worker . worker id :  "<< worker_id ;
+        RTC_LOG(LS_INFO) << "create signaling worker . worker id :  "<< worker_id ;
         SignalingWorker* worker = new SignalingWorker(worker_id);
-        if(worker->init() != 0 || worker->start() != 0){
+        if(worker->init() != 0 ){
+            return -1;
+        }
+
+        if(!worker->start()){
             return -1;
         }
         _workers.push_back(worker);

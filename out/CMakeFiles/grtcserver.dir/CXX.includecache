@@ -126,6 +126,10 @@ type_traits
 
 ../src/base/event_loop.h
 
+../src/base/lock_free_queue.h
+atomic
+-
+
 ../src/base/socket.h
 sys/socket.h
 -
@@ -143,6 +147,8 @@ thread
 ../src/server/signaling_worker.h
 base/event_loop.h
 ../src/server/base/event_loop.h
+base/lock_free_queue.h
+../src/server/base/lock_free_queue.h
 thread
 -
 
@@ -714,46 +720,6 @@ yaml-cpp/node/parse.h
 yaml-cpp/node/emit.h
 ../third_party/include/yaml-cpp/yaml-cpp/node/emit.h
 
-/home/ubuntu/devspace/cpp/grtcserver/src/base/conf.h
-string
--
-
-/home/ubuntu/devspace/cpp/grtcserver/src/base/log.h
-rtc_base/logging.h
--
-fstream
--
-queue
--
-mutex
--
-thread
--
-
-/home/ubuntu/devspace/cpp/grtcserver/src/base/socket.cpp
-base/socket.h
-/home/ubuntu/devspace/cpp/grtcserver/src/base/base/socket.h
-unistd.h
--
-rtc_base/logging.h
--
-arpa/inet.h
--
-
-/home/ubuntu/devspace/cpp/grtcserver/src/main.cpp
-iostream
--
-base/conf.h
-/home/ubuntu/devspace/cpp/grtcserver/src/base/conf.h
-base/log.h
-/home/ubuntu/devspace/cpp/grtcserver/src/base/log.h
-server/signaling_server.h
-/home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_server.h
-unistd.h
--
-signal.h
--
-
 /home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_server.cpp
 server/signaling_server.h
 /home/ubuntu/devspace/cpp/grtcserver/src/server/server/signaling_server.h
@@ -767,16 +733,6 @@ unistd.h
 -
 server/signaling_worker.h
 /home/ubuntu/devspace/cpp/grtcserver/src/server/server/signaling_worker.h
-
-/home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_server.h
-string
--
-base/event_loop.h
-/home/ubuntu/devspace/cpp/grtcserver/src/server/base/event_loop.h
-vector
--
-thread
--
 
 /home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_worker.cpp
 server/signaling_worker.h

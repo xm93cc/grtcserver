@@ -8,8 +8,7 @@ namespace grtc
 
     void signaling_worker_recv_notify (EventLoop* el,IOWatcher* w,int fd, int events,void* data){
         int msg;
-        if(read(fd,&msg,sizeof(msg)) == sizeof(int)){
-           
+        if(read(fd,&msg,sizeof(msg)) != sizeof(int)){
             return;
         }
         SignalingWorker* worker = (SignalingWorker*)data;
@@ -40,24 +39,35 @@ namespace grtc
            return false;
         }
         _thread = new std::thread([=](){
-            RTC_LOG(LS_INFO) << "signaling worker thread start up. ";
+            RTC_LOG(LS_INFO) << "signaling worker thread event loop start up. ";
             _el->start();
-            RTC_LOG(LS_INFO) << "signaling worker thread stop. ";
+            RTC_LOG(LS_INFO) << "signaling worker thread event loop stop. ";
         });
 
         return true;
     }
 
     void SignalingWorker::_process_notify(int msg){
+        RTC_LOG(LS_INFO)<<"process notify : "<<msg; 
         switch (msg)
         {
-        case QUIT:
+        case SignalingWorker::QUIT:
             _stop();
+            break;
+        case SignalingWorker::NEW_CONN:
+            int fd;
+            if(_q_conn.consume(&fd)){
+                _new_conn(fd);
+            }
             break;
         default:
             RTC_LOG(LS_WARNING) << "unknown msg: "<<msg;
             break;
         }
+    }
+
+    void SignalingWorker::_new_conn(int fd){
+        RTC_LOG(LS_INFO) << "conn fd: "<<fd;
     }
 
     int SignalingWorker::notify(int msg){
@@ -75,10 +85,11 @@ namespace grtc
         _el->stop();
         close(_notify_recv_fd);
         close(_notify_send_fd);  
+        RTC_LOG(LS_INFO)<<"signaling worker free resource done. "; 
     }
 
     void SignalingWorker::stop(){
-        notify(QUIT);
+        notify(SignalingWorker::QUIT);
     }
 
     void SignalingWorker::join(){
@@ -88,7 +99,8 @@ namespace grtc
     }
 
    int SignalingWorker::notify_new_conn(int fd){
-
+        _q_conn.produce(&fd);
+        return notify(SignalingWorker::NEW_CONN);
    } 
 
 } // namespace grtc

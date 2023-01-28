@@ -151,6 +151,7 @@ CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o
  ../../rtcbase/src/rtc_base/system/rtc_export.h
  ../../rtcbase/src/rtc_base/type_traits.h
  ../src/base/event_loop.h
+ ../src/base/lock_free_queue.h
  ../src/base/socket.h
  ../src/server/signaling_server.h
  ../src/server/signaling_worker.h
@@ -217,6 +218,7 @@ CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o
  ../../rtcbase/src/rtc_base/system/rtc_export.h
  ../../rtcbase/src/rtc_base/type_traits.h
  ../src/base/event_loop.h
+ ../src/base/lock_free_queue.h
  ../src/server/signaling_worker.h
  ../third_party/include/absl/base/attributes.h
  ../third_party/include/absl/base/config.h

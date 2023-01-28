@@ -8,3 +8,119 @@ VERBOSE: [000:000][1613365] (src/main.cpp:44): hello word
 INFO: [000:000][1894497] (src/server/signaling_server.cpp:118): signaling server start up .
 INFO: [000:000][1894763] (src/server/signaling_server.cpp:118): signaling server start up .
 INFO: [000:000][2772054] (src/server/signaling_server.cpp:118): signaling server start up .
+INFO: [000:001][3130576] (src/server/signaling_server.cpp:165): signaling server start up .
+INFO: [000:000][3131064] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:000][3131064] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:000][3131066] (src/server/signaling_server.cpp:165): signaling server start up .
+INFO: [000:000][3131781] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:000][3131781] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:000][3131783] (src/server/signaling_server.cpp:165): signaling server start up .
+INFO: [000:000][3133712] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:000][3134557] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:000][3134959] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:001][3134959] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:001][3134963] (src/server/signaling_server.cpp:165): signaling server start up .
+INFO: [000:001][3134961] (src/server/signaling_worker.cpp:43): signaling worker thread start up. 
+INFO: [000:001][3134962] (src/server/signaling_worker.cpp:43): signaling worker thread start up. 
+INFO: [000:000][3135734] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:000][3135734] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:000][3135736] (src/server/signaling_worker.cpp:43): signaling worker thread start up. 
+INFO: [000:000][3135737] (src/server/signaling_worker.cpp:43): signaling worker thread start up. 
+INFO: [000:000][3135738] (src/server/signaling_server.cpp:165): signaling server start up .
+INFO: [000:000][3136409] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:000][3136409] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:000][3136411] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:000][3136412] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:000][3136413] (src/server/signaling_server.cpp:165): signaling server event loop run.
+INFO: [002:188][3136409] (src/main.cpp:46): receive signal: 2
+INFO: [256:314][3136409] (src/main.cpp:46): receive signal: 2
+INFO: [256:631][3136409] (src/main.cpp:46): receive signal: 2
+INFO: [256:812][3136409] (src/main.cpp:46): receive signal: 2
+INFO: [256:998][3136409] (src/main.cpp:46): receive signal: 2
+INFO: [257:188][3136409] (src/main.cpp:46): receive signal: 2
+INFO: [257:330][3136409] (src/main.cpp:46): receive signal: 2
+INFO: [257:512][3136409] (src/main.cpp:46): receive signal: 2
+INFO: [000:000][3137286] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:001][3137286] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:001][3137288] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:001][3137289] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:001][3137290] (src/server/signaling_server.cpp:165): signaling server event loop run.
+INFO: [003:475][3137286] (src/main.cpp:46): receive signal: 2
+INFO: [003:475][3137290] (src/server/signaling_server.cpp:135): signaling server stop.
+INFO: [000:000][3137532] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:000][3137532] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:000][3137534] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:000][3137535] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:000][3137536] (src/server/signaling_server.cpp:165): signaling server event loop run.
+INFO: [003:905][3137532] (src/main.cpp:46): receive signal: 2
+INFO: [003:905][3137536] (src/server/signaling_server.cpp:135): signaling server stop.
+INFO: [000:000][3139035] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:000][3139035] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:000][3139037] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:000][3139038] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:000][3139039] (src/server/signaling_server.cpp:165): signaling server event loop run.
+INFO: [002:145][3139035] (src/main.cpp:46): receive signal: 2
+INFO: [002:145][3139039] (src/server/signaling_server.cpp:135): signaling server stop.
+INFO: [033:905][3139035] (src/main.cpp:46): receive signal: 2
+INFO: [000:000][3139573] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:001][3139573] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:001][3139578] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:001][3139579] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:001][3139580] (src/server/signaling_server.cpp:165): signaling server event loop run.
+INFO: [000:000][3140744] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:001][3140744] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:001][3140754] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:002][3140755] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:003][3140756] (src/server/signaling_server.cpp:165): signaling server event loop run.
+INFO: [000:000][3141509] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+INFO: [000:000][3141509] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+INFO: [000:000][3141511] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:001][3141512] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:001][3141513] (src/server/signaling_server.cpp:165): signaling server event loop run.
+INFO: [001:241][3141509] (src/main.cpp:46): receive signal: 2
+INFO: [001:241][3141513] (src/server/signaling_server.cpp:135): signaling server stop.
+INFO: [001:429][3141509] (src/main.cpp:46): receive signal: 2
+INFO: [000:000][3141668] (src/server/signaling_server.cpp:175): create signaling worker . worker id :  0
+INFO: [000:001][3141668] (src/server/signaling_server.cpp:175): create signaling worker . worker id :  1
+INFO: [000:001][3141670] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:001][3141671] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:001][3141672] (src/server/signaling_server.cpp:167): signaling server event loop run.
+INFO: [002:189][3141668] (src/main.cpp:46): receive signal: 2
+INFO: [002:189][3141672] (src/server/signaling_server.cpp:135): signaling server stop.
+INFO: [002:189][3141672] (src/server/signaling_server.cpp:138): signaling worker stoping. 
+INFO: [000:000][3142157] (src/server/signaling_server.cpp:175): create signaling worker . worker id :  0
+INFO: [000:000][3142157] (src/server/signaling_server.cpp:175): create signaling worker . worker id :  1
+INFO: [000:000][3142161] (src/server/signaling_server.cpp:167): signaling server event loop run.
+INFO: [000:000][3142160] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:000][3142159] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [015:341][3142157] (src/main.cpp:46): receive signal: 2
+INFO: [015:342][3142161] (src/server/signaling_server.cpp:135): signaling server stop.
+INFO: [015:342][3142161] (src/server/signaling_server.cpp:138): signaling worker stoping. 
+INFO: [043:988][3142157] (src/main.cpp:46): receive signal: 2
+INFO: [000:000][3142621] (src/server/signaling_server.cpp:175): create signaling worker . worker id :  0
+INFO: [000:000][3142621] (src/server/signaling_server.cpp:175): create signaling worker . worker id :  1
+INFO: [000:000][3142623] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:000][3142624] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:000][3142625] (src/server/signaling_server.cpp:167): signaling server event loop run.
+INFO: [003:604][3142621] (src/main.cpp:46): receive signal: 2
+INFO: [003:604][3142625] (src/server/signaling_server.cpp:135): signaling server stop.
+INFO: [003:604][3142625] (src/server/signaling_server.cpp:138): signaling worker stoping. 
+INFO: [000:000][3143061] (src/server/signaling_server.cpp:175): create signaling worker . worker id :  0
+INFO: [000:000][3143061] (src/server/signaling_server.cpp:175): create signaling worker . worker id :  1
+INFO: [000:001][3143063] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:001][3143064] (src/server/signaling_worker.cpp:43): signaling worker thread event loop start up. 
+INFO: [000:001][3143065] (src/server/signaling_server.cpp:167): signaling server event loop run.
+INFO: [002:100][3143061] (src/main.cpp:46): receive signal: 2
+INFO: [002:100][3143065] (src/server/signaling_server.cpp:135): signaling server stop.
+INFO: [002:100][3143065] (src/server/signaling_server.cpp:138): signaling worker stoping. 
+INFO: [034:661][3143061] (src/main.cpp:46): receive signal: 2
+INFO: [000:000][3143403] (src/server/signaling_server.cpp:175): create signaling worker . worker id :  0
+INFO: [000:000][3143403] (src/server/signaling_server.cpp:175): create signaling worker . worker id :  1
+INFO: [000:000][3143405] (src/server/signaling_worker.cpp:42): signaling worker thread event loop start up. 
+INFO: [000:000][3143406] (src/server/signaling_worker.cpp:42): signaling worker thread event loop start up. 
+INFO: [000:000][3143407] (src/server/signaling_server.cpp:167): signaling server event loop run.
+INFO: [000:000][3144057] (src/server/signaling_server.cpp:174): create signaling worker . worker id :  0
+INFO: [000:000][3144057] (src/server/signaling_server.cpp:174): create signaling worker . worker id :  1
+INFO: [000:000][3144059] (src/server/signaling_worker.cpp:42): signaling worker thread event loop start up. 
+INFO: [000:000][3144060] (src/server/signaling_worker.cpp:42): signaling worker thread event loop start up. 
+INFO: [000:000][3144061] (src/server/signaling_server.cpp:166): signaling server event loop run.

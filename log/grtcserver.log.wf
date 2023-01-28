@@ -1,2 +1,10 @@
 WARNING: [000:000][1006071] (src/main.cpp:45): xxhello word
 WARNING: [000:000][1613365] (src/main.cpp:45): xxhello word
+WARNING: [000:000][3130574] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  0
+WARNING: [000:001][3130574] (src/server/signaling_worker.cpp:39): signaling worker already start.
+WARNING: [000:001][3130574] (src/server/signaling_server.cpp:173): create signaling worker . worker id :  1
+WARNING: [000:001][3130574] (src/server/signaling_worker.cpp:39): signaling worker already start.
+WARNING: [000:000][3131064] (src/server/signaling_worker.cpp:39): signaling worker already start.
+WARNING: [000:000][3131064] (src/server/signaling_worker.cpp:39): signaling worker already start.
+WARNING: [000:000][3131781] (src/server/signaling_worker.cpp:39): signaling worker already start.
+WARNING: [000:000][3131781] (src/server/signaling_worker.cpp:39): signaling worker already start.
