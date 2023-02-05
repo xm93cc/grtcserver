@@ -143,6 +143,7 @@ CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../../rtcbase/src/r
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../../rtcbase/src/rtc_base/constructor_magic.h
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../../rtcbase/src/rtc_base/logging.h
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../../rtcbase/src/rtc_base/numerics/safe_compare.h
+CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../../rtcbase/src/rtc_base/slice.h
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../../rtcbase/src/rtc_base/string_encode.h
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../../rtcbase/src/rtc_base/string_to_number.h
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../../rtcbase/src/rtc_base/strings/string_builder.h
@@ -210,6 +211,8 @@ CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/r
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/rtc_base/constructor_magic.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/rtc_base/logging.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/rtc_base/numerics/safe_compare.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/rtc_base/sds.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/rtc_base/slice.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/rtc_base/string_encode.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/rtc_base/string_to_number.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/rtc_base/strings/string_builder.h
@@ -217,6 +220,7 @@ CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/r
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/rtc_base/system/rtc_export.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../../rtcbase/src/rtc_base/type_traits.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../src/base/event_loop.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../src/base/ghead.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../src/base/lock_free_queue.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../src/base/socket.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../src/server/signaling_worker.h
@@ -241,7 +245,9 @@ CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/incl
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/absl/utility/utility.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../src/server/signaling_worker.cpp
 
+CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o: ../../rtcbase/src/rtc_base/sds.h
 CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o: ../src/base/event_loop.h
+CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o: ../src/base/ghead.h
 CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o: ../src/server/tcp_connection.h
 CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o: ../src/server/tcp_connection.cpp
 

@@ -3,7 +3,7 @@
 namespace grtc
 {
 
-    TcpConnection::TcpConnection(int fd) : fd(fd){}
+    TcpConnection::TcpConnection(int fd) : fd(fd),querybuf(sdsempty()){}
     TcpConnection::~TcpConnection(){}
     
 } // namespace grtc

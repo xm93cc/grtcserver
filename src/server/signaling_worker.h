@@ -3,6 +3,7 @@
 
 #include "base/event_loop.h"
 #include "base/lock_free_queue.h"
+#include<rtc_base/slice.h>
 #include<vector>
 #include<thread>
 namespace grtc{
@@ -13,6 +14,14 @@ class SignalingWorker{
         void _process_notify(int msg);
         void _new_conn(int fd);
         void _read_query(int fd);
+        //处理buffer
+        int _process_query_buffer(TcpConnection* c);
+        //处理请求过来的数据报
+        int _process_request(TcpConnection* c, const rtc::Slice& header,const rtc::Slice& body);
+        //关闭连接
+        void  _close_conn(TcpConnection* c);
+        //从连接数组中移除连接
+        void _remove_conn(TcpConnection* c);
     
     public:
         enum{

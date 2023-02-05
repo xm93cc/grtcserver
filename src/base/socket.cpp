@@ -127,6 +127,23 @@ namespace grtc{
             *port = ntohs(sa.sin_port);
         }
         return 0;
-   } 
+   }
+
+   int sock_read_data(int sock,char* buf,size_t len){
+       int ret =  read(sock,buf,len);
+       if(-1 == ret){
+            if(EAGAIN == errno){
+               ret = 0;
+            }else{
+                RTC_LOG(LS_WARNING) << "sock read failed, error: "<< strerror(errno) << " , errno: "<< errno << " , sock: "<<sock;
+                return -1;
+            }
+       }else if(0 == ret){
+            RTC_LOG(LS_WARNING) << "connection closed, fd: " << sock;
+            return -1;
+       }
+       return ret;
+   }
+
 
 } // namespace grtc

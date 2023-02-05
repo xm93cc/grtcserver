@@ -69,6 +69,91 @@ namespace grtc
 
     void SignalingWorker::_read_query(int fd){
         RTC_LOG(LS_INFO)<< "signaling worker "<< _worker_id << " receive read event, fd: " << fd;
+        if(fd < 0 || (size_t)fd >= _conns.size()){
+            RTC_LOG(LS_WARNING) << "invalid fd: "<< fd ;
+            return;
+        }
+
+        TcpConnection* c = _conns[fd];
+        int nread = 0;
+        //第一次读取头部大小的数据报
+        int read_len = c->bytes_expected;
+        //buffer 中已读取多少字节
+        int qb_len = sdslen(c->querybuf);
+        //根据本次需要读取的长度 创建or扩充buffer
+        c->querybuf = sdsMakeRoomFor(c->querybuf,read_len);
+        nread = sock_read_data(fd,c->querybuf + qb_len,read_len);
+        RTC_LOG(LS_INFO) << "sock read data , len: " << nread;
+        if(-1 == nread){
+            //case -1 connection close 
+            _close_conn(c);
+            return;
+        }else if(nread > 0){
+            //更改buffer已读取的长度，方便sdslen读取有效的长度
+            sdsIncrLen(c->querybuf,nread);
+        }
+        int ret = _process_query_buffer(c);
+        if(ret != 0){
+            _close_conn(c);
+            return;
+        }
+
+    }
+
+    int SignalingWorker::_process_query_buffer(TcpConnection *c){
+        while (sdslen(c->querybuf) >= c->bytes_processed + c->bytes_expected){
+            //读取buffer中强制类型转换
+            /**
+             * type Header struct {
+                     Id       uint16
+                     Version  uint16
+                     LogId    uint32
+                     Provider [16]byte
+                     MagicNum uint32
+                     Reserved uint32
+                     BodyLen  uint32
+                }
+             * 信令服务中头的定义
+             * */
+            ghead_t *head = (ghead_t *)(c->querybuf);
+            if(TcpConnection::STATE_HEAD == c->current_state){
+               if(GHEAD_MAGIC_NUM != head->magic_num){
+                    RTC_LOG(LS_WARNING) << "invalid data, fd: "<< c->fd << " , magic num: "<< head->magic_num;
+                    return -1;
+               }
+               //读取到头部后 读取body的信息，body长度在head中
+               c->current_state = TcpConnection::STATE_BODY;
+               c->bytes_expected = head->body_len;
+               c->bytes_processed = GHEAD_SIZE;
+            }else {
+                rtc::Slice header(c->querybuf,GHEAD_SIZE);
+                rtc::Slice body(c->querybuf + GHEAD_SIZE,head->body_len);
+                int ret = _process_request(c,header,body);
+                if(ret != 0){
+                    return -1;
+                }
+                //此TCP连接是短链接情况，接收到header 和 body中的内容后不在处理后续报文
+                //总数据包长度绝对不会达到此常量
+                c->bytes_processed = 65535;
+            }
+        }
+        return 0;
+    }
+
+    void SignalingWorker::_close_conn(TcpConnection* c){
+        close(c->fd);
+        _remove_conn(c);
+    }
+
+    void SignalingWorker::_remove_conn(TcpConnection* c){
+        _el->delete_io_event(c->io_watcher);
+        _conns[c->fd] = nullptr;
+        delete c;
+    }
+
+    int SignalingWorker::_process_request(TcpConnection *c, const rtc::Slice& header,const rtc::Slice& body){
+        RTC_LOG(LS_INFO) << "receive body: " << body.data();
+        return 0;
     }
 
     void conn_io_cb (EventLoop* /*el*/,IOWatcher* /*w*/,int fd, int events,void* data){
