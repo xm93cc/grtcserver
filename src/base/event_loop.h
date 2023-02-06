@@ -33,6 +33,9 @@ namespace grtc
         void start_timer(TimerWatcher *w, unsigned int usec);
         void stop_timer(TimerWatcher *w);
         void delete_timer(TimerWatcher *w);
+        void* owner(){return _owner;}
+        //获取时间戳
+        unsigned long now();
     };
 
 } // namespace grtc

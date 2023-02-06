@@ -16,8 +16,27 @@ namespace grtc
         worker->_process_notify(msg);
         
     }
-    SignalingWorker::SignalingWorker(int worker_id):_worker_id(worker_id),_el(new EventLoop(this)){}
-    SignalingWorker::~SignalingWorker(){}
+    SignalingWorker::SignalingWorker(int worker_id,SignalingServerOptions& options):_worker_id(worker_id),_el(new EventLoop(this)),_options(options){}
+    SignalingWorker::~SignalingWorker(){
+        for(auto conn : _conns){
+            if(conn){
+                _close_conn(conn);
+            }
+        }
+        _conns.clear();
+        if(_el){
+            delete _el;
+            _el = nullptr;
+        }
+
+        if(_thread){
+            delete _thread;
+            _thread = nullptr;
+        }
+
+
+
+    }
 
     int SignalingWorker::init(){
         int fds[2];
@@ -83,6 +102,7 @@ namespace grtc
         //根据本次需要读取的长度 创建or扩充buffer
         c->querybuf = sdsMakeRoomFor(c->querybuf,read_len);
         nread = sock_read_data(fd,c->querybuf + qb_len,read_len);
+        c->last_interaction = _el->now();
         RTC_LOG(LS_INFO) << "sock read data , len: " << nread;
         if(-1 == nread){
             //case -1 connection close 
@@ -141,11 +161,13 @@ namespace grtc
     }
 
     void SignalingWorker::_close_conn(TcpConnection* c){
+        RTC_LOG(LS_INFO) << "close connection, fd: "<<c->fd;
         close(c->fd);
         _remove_conn(c);
     }
 
     void SignalingWorker::_remove_conn(TcpConnection* c){
+        _el->delete_timer(c->timer_watcher);
         _el->delete_io_event(c->io_watcher);
         _conns[c->fd] = nullptr;
         delete c;
@@ -164,6 +186,20 @@ namespace grtc
         }
 
     }
+    //定时器回调
+    void conn_timeout_cb(EventLoop* el,TimerWatcher* /*w*/,void* data){
+        SignalingWorker* worker = (SignalingWorker*)el->owner();
+        TcpConnection* c = (TcpConnection*)data;
+        worker->_process_timeout(c);
+    }
+
+    void SignalingWorker::_process_timeout(TcpConnection* c){
+        // RTC_LOG(LS_INFO) << "connection timeout , fd: "<<c->fd;
+        if(_el->now() - c->last_interaction >= (unsigned long) _options.connection_timeout){
+            RTC_LOG(LS_INFO) << "connection timeout , fd: "<<c->fd;
+            _close_conn(c);
+        }
+    }
 
     void SignalingWorker::_new_conn(int fd){
         RTC_LOG(LS_INFO) << "signaling server worker_id : "<< _worker_id<<" conn fd: "<<fd;
@@ -177,8 +213,14 @@ namespace grtc
         sock_setnodelay(fd);
         TcpConnection* tcpconn = new TcpConnection(fd);
         sock_peer_2_str(fd,tcpconn->ip,&(tcpconn->port));
+        //启动事件监听
         tcpconn->io_watcher = _el->create_io_event(conn_io_cb,this);
         _el->strart_io_event(tcpconn->io_watcher,fd,EventLoop::READ);
+        //启动定时器 
+        tcpconn->timer_watcher = _el->create_timer(conn_timeout_cb,tcpconn,true);
+        _el->start_timer(tcpconn->timer_watcher,100000);//100ms
+        //设置当前时间戳
+        tcpconn->last_interaction = _el->now();
         if((size_t)fd >= _conns.size()){
             _conns.resize(fd * 2, nullptr);
         }

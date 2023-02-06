@@ -27,6 +27,11 @@ namespace grtc
         ev_break(_loop, EVBREAK_ALL);
     }
 
+
+    unsigned long EventLoop::now(){
+        return static_cast<unsigned long>(ev_now(_loop) * 1000000);//us
+    }
+
     class IOWatcher
     {
     public:
@@ -145,6 +150,7 @@ namespace grtc
         float sec = float(usec) / 1000000;
         if (!w->need_repeat)
         {
+            ev_timer_stop(_loop,time);
             ev_timer_set(time, sec, 0);
             ev_timer_start(_loop, time);
         }

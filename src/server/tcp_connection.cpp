@@ -4,6 +4,8 @@ namespace grtc
 {
 
     TcpConnection::TcpConnection(int fd) : fd(fd),querybuf(sdsempty()){}
-    TcpConnection::~TcpConnection(){}
+    TcpConnection::~TcpConnection(){
+        sdsfree(querybuf);
+    }
     
 } // namespace grtc

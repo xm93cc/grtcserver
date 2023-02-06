@@ -6,6 +6,7 @@
 #include<rtc_base/slice.h>
 #include<vector>
 #include<thread>
+#include"server/signaling_server.h"
 namespace grtc{
 class TcpConnection;
 class SignalingWorker{
@@ -22,13 +23,15 @@ class SignalingWorker{
         void  _close_conn(TcpConnection* c);
         //从连接数组中移除连接
         void _remove_conn(TcpConnection* c);
+        //连接建立超过配置文件配置的时长后关闭连接
+        void _process_timeout(TcpConnection* c);
     
     public:
         enum{
             QUIT = 0,
             NEW_CONN = 1
         };
-        SignalingWorker(int worker_id);
+        SignalingWorker(int worker_id,SignalingServerOptions& options);
         ~SignalingWorker();
         void stop();
         void join();
@@ -38,6 +41,7 @@ class SignalingWorker{
         int notify_new_conn(int fd);
         friend void signaling_worker_recv_notify(EventLoop* el,IOWatcher* w,int fd, int events,void* data);
         friend void conn_io_cb (EventLoop* el,IOWatcher* w,int fd, int events,void* data);
+        friend void conn_timeout_cb(EventLoop* el,TimerWatcher* w,void* data);
       private:
         int _worker_id;
         EventLoop* _el;
@@ -47,6 +51,7 @@ class SignalingWorker{
         int _notify_send_fd = -1;
         LockFreeQueue<int> _q_conn;
         std::vector<TcpConnection*> _conns;
+        SignalingServerOptions _options;
 };
 
 

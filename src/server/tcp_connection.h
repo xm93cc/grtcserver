@@ -12,8 +12,9 @@ namespace grtc
         int fd;
         char ip[64];
         int port;
-        IOWatcher* io_watcher;
-        EventLoop* _el;     
+        IOWatcher* io_watcher = nullptr;
+        TimerWatcher* timer_watcher  = nullptr;
+        EventLoop* _el;
         //redis中的buffer结构，sds 有较为全面操作的方法
         sds querybuf;
         //预期读取字节数
@@ -21,6 +22,7 @@ namespace grtc
         //已处理字节数
         size_t bytes_processed = 0;
         int current_state = STATE_HEAD;
+        unsigned long last_interaction = 0;
         
 
 

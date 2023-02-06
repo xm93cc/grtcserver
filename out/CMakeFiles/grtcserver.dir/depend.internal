@@ -224,6 +224,7 @@ CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o
  ../src/base/ghead.h
  ../src/base/lock_free_queue.h
  ../src/base/socket.h
+ ../src/server/signaling_server.h
  ../src/server/signaling_worker.h
  ../src/server/tcp_connection.h
  ../third_party/include/absl/base/attributes.h
