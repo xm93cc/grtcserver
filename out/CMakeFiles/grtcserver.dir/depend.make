@@ -244,6 +244,15 @@ CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/incl
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/absl/types/internal/optional.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/absl/types/optional.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/absl/utility/utility.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/json/allocator.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/json/config.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/json/forwards.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/json/json.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/json/json_features.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/json/reader.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/json/value.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/json/version.h
+CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../third_party/include/json/writer.h
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../src/server/signaling_worker.cpp
 
 CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o: ../../rtcbase/src/rtc_base/sds.h

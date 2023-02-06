@@ -4,6 +4,7 @@
 #include<unistd.h>
 #include"base/socket.h"
 #include"server/tcp_connection.h"
+#include<json/json.h>
 namespace grtc
 {
 
@@ -175,6 +176,9 @@ namespace grtc
 
     int SignalingWorker::_process_request(TcpConnection *c, const rtc::Slice& header,const rtc::Slice& body){
         RTC_LOG(LS_INFO) << "receive body: " << body.data();
+        Json::CharReaderBuilder builder;
+        std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
+
         return 0;
     }
 

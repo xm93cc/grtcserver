@@ -25,5 +25,5 @@ file(GLOB all_src
 add_executable(grtcserver ${all_src})
 
 target_link_libraries(grtcserver libyaml-cpp.a librtcbase.a -lpthread
-    libabsl_strings.a libabsl_throw_delegate.a libev.a
+    libabsl_strings.a libabsl_throw_delegate.a libev.a libjsoncpp.a
 )
