@@ -7,6 +7,7 @@
 #include<vector>
 #include<thread>
 #include"server/signaling_server.h"
+#include<json/json.h>
 namespace grtc{
 class TcpConnection;
 class SignalingWorker{
@@ -25,6 +26,8 @@ class SignalingWorker{
         void _remove_conn(TcpConnection* c);
         //连接建立超过配置文件配置的时长后关闭连接
         void _process_timeout(TcpConnection* c);
+        //处理推流
+        int _process_push(int cmdno,TcpConnection* c,const Json::Value& root,uint32_t log_id);
     
     public:
         enum{

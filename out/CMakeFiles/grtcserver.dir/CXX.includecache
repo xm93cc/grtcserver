@@ -154,6 +154,8 @@ atomic
 sys/socket.h
 -
 
+../src/grtcserver_def.h
+
 ../src/server/signaling_server.h
 string
 -
@@ -177,6 +179,8 @@ thread
 -
 server/signaling_server.h
 ../src/server/server/signaling_server.h
+json/json.h
+-
 
 ../src/server/tcp_connection.h
 base/event_loop.h
@@ -507,6 +511,6 @@ base/socket.h
 /home/ubuntu/devspace/cpp/grtcserver/src/server/base/socket.h
 server/tcp_connection.h
 /home/ubuntu/devspace/cpp/grtcserver/src/server/server/tcp_connection.h
-json/json.h
--
+grtcserver_def.h
+/home/ubuntu/devspace/cpp/grtcserver/src/server/grtcserver_def.h
 
