@@ -5,6 +5,8 @@
 #include"base/socket.h"
 #include"server/tcp_connection.h"
 #include"grtcserver_def.h"
+#include"server/rtc_server.h"
+extern grtc::RtcServer* g_rtc_server;
 namespace grtc
 {
 
@@ -229,8 +231,7 @@ namespace grtc
         msg->uid = uid;
         msg->audio = audio;
         msg->video = video;
-        //return g_rtc_server->send_rtc_msg(msg);
-        return 0;
+        return g_rtc_server->send_rtc_msg(msg);
     }
 
     void conn_io_cb (EventLoop* /*el*/,IOWatcher* /*w*/,int fd, int events,void* data){

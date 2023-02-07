@@ -122,9 +122,35 @@ CMakeFiles/grtcserver.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/grtcserver.dir/src/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ubuntu/devspace/cpp/grtcserver/src/main.cpp -o CMakeFiles/grtcserver.dir/src/main.cpp.s
 
+CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o: CMakeFiles/grtcserver.dir/flags.make
+CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o: ../src/server/rtc_server.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o -c /home/ubuntu/devspace/cpp/grtcserver/src/server/rtc_server.cpp
+
+CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ubuntu/devspace/cpp/grtcserver/src/server/rtc_server.cpp > CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.i
+
+CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ubuntu/devspace/cpp/grtcserver/src/server/rtc_server.cpp -o CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.s
+
+CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.o: CMakeFiles/grtcserver.dir/flags.make
+CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.o: ../src/server/rtc_worker.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.o -c /home/ubuntu/devspace/cpp/grtcserver/src/server/rtc_worker.cpp
+
+CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ubuntu/devspace/cpp/grtcserver/src/server/rtc_worker.cpp > CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.i
+
+CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ubuntu/devspace/cpp/grtcserver/src/server/rtc_worker.cpp -o CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.s
+
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: CMakeFiles/grtcserver.dir/flags.make
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../src/server/signaling_server.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o -c /home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_server.cpp
 
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.i: cmake_force
@@ -137,7 +163,7 @@ CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.s: cmake_force
 
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: CMakeFiles/grtcserver.dir/flags.make
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o: ../src/server/signaling_worker.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o -c /home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_worker.cpp
 
 CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.i: cmake_force
@@ -150,7 +176,7 @@ CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.s: cmake_force
 
 CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o: CMakeFiles/grtcserver.dir/flags.make
 CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o: ../src/server/tcp_connection.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o -c /home/ubuntu/devspace/cpp/grtcserver/src/server/tcp_connection.cpp
 
 CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.i: cmake_force
@@ -168,6 +194,8 @@ grtcserver_OBJECTS = \
 "CMakeFiles/grtcserver.dir/src/base/log.cpp.o" \
 "CMakeFiles/grtcserver.dir/src/base/socket.cpp.o" \
 "CMakeFiles/grtcserver.dir/src/main.cpp.o" \
+"CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o" \
+"CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.o" \
 "CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o" \
 "CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o" \
 "CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o"
@@ -180,12 +208,14 @@ grtcserver: CMakeFiles/grtcserver.dir/src/base/event_loop.cpp.o
 grtcserver: CMakeFiles/grtcserver.dir/src/base/log.cpp.o
 grtcserver: CMakeFiles/grtcserver.dir/src/base/socket.cpp.o
 grtcserver: CMakeFiles/grtcserver.dir/src/main.cpp.o
+grtcserver: CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o
+grtcserver: CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.o
 grtcserver: CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o
 grtcserver: CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o
 grtcserver: CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o
 grtcserver: CMakeFiles/grtcserver.dir/build.make
 grtcserver: CMakeFiles/grtcserver.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable grtcserver"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable grtcserver"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/grtcserver.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

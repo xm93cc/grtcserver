@@ -4,6 +4,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/grtcserver.dir/src/base/log.cpp.o"
   "CMakeFiles/grtcserver.dir/src/base/socket.cpp.o"
   "CMakeFiles/grtcserver.dir/src/main.cpp.o"
+  "CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o"
+  "CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.o"
   "CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o"
   "CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o"
   "CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o"

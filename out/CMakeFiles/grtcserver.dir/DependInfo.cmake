@@ -9,6 +9,8 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/ubuntu/devspace/cpp/grtcserver/src/base/log.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/base/log.cpp.o"
   "/home/ubuntu/devspace/cpp/grtcserver/src/base/socket.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/base/socket.cpp.o"
   "/home/ubuntu/devspace/cpp/grtcserver/src/main.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/main.cpp.o"
+  "/home/ubuntu/devspace/cpp/grtcserver/src/server/rtc_server.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o"
+  "/home/ubuntu/devspace/cpp/grtcserver/src/server/rtc_worker.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/server/rtc_worker.cpp.o"
   "/home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_server.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o"
   "/home/ubuntu/devspace/cpp/grtcserver/src/server/signaling_worker.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/server/signaling_worker.cpp.o"
   "/home/ubuntu/devspace/cpp/grtcserver/src/server/tcp_connection.cpp" "/home/ubuntu/devspace/cpp/grtcserver/out/CMakeFiles/grtcserver.dir/src/server/tcp_connection.cpp.o"
