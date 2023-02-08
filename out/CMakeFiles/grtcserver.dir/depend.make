@@ -155,6 +155,7 @@ CMakeFiles/grtcserver.dir/src/main.cpp.o: ../src/server/signaling_server.h
 CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o: ../../rtcbase/src/api/array_view.h
 CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o: ../../rtcbase/src/rtc_base/checks.h
 CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o: ../../rtcbase/src/rtc_base/constructor_magic.h
+CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o: ../../rtcbase/src/rtc_base/crc32.h
 CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o: ../../rtcbase/src/rtc_base/logging.h
 CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o: ../../rtcbase/src/rtc_base/numerics/safe_compare.h
 CMakeFiles/grtcserver.dir/src/server/rtc_server.cpp.o: ../../rtcbase/src/rtc_base/slice.h

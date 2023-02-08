@@ -67,6 +67,6 @@
     "C_Cpp.errorSquiggles": "enabled",
     "editor.fontSize": 16,
     "screencastMode.fontSize": 32,
-    "terminal.integrated.fontSize": 12,
+    "terminal.integrated.fontSize": 16,
     "editor.codeLensFontSize": 1
 }

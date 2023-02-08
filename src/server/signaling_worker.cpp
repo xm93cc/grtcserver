@@ -231,6 +231,7 @@ namespace grtc
         msg->uid = uid;
         msg->audio = audio;
         msg->video = video;
+        msg->log_id = log_id;
         return g_rtc_server->send_rtc_msg(msg);
     }
 

@@ -79,10 +79,12 @@ namespace grtc
    void RtcWorker::_process_notify(int msg){
        switch (msg)
         {
-        case RtcServer::QUIT:
+        case RtcWorker::QUIT:
              _stop();
             break;
-        
+        case RtcWorker::RTC_MSG:
+            _process_rtc_msg();
+            break;
         default:
             RTC_LOG(LS_WARNING)<< "unknown msg: "<< msg;
             break;
@@ -100,6 +102,49 @@ namespace grtc
       close(_notify_recv_fd);
       close(_notify_send_fd);
    }
+   //发送Rtc msg
+   int RtcWorker::send_rtc_msg(std::shared_ptr<RtcMsg> msg){
+      //将消息投递到worker的队列
+      push_msg(msg);
+      return notify(RtcWorker::RTC_MSG);
 
+   }
+
+   // 推入RTC MSG
+   void RtcWorker::push_msg(std::shared_ptr<RtcMsg> msg)
+   {
+      _q_msg.produce(msg);
+   }
+   // 弹出RTC MSG
+   bool RtcWorker::pop_msg(std::shared_ptr<RtcMsg> *msg)
+   {
+      return _q_msg.consume(msg);
+   }
+     //处理rtc消息
+   void RtcWorker::_process_rtc_msg(){
+         std::shared_ptr<RtcMsg> msg;
+         if(!pop_msg(&msg)){
+            return ;
+         }
+      RTC_LOG(LS_INFO) << "cmdno[" << msg->cmdno << "] uid[" << msg->uid << "] stream_name[" << 
+        msg->stream_name << "] audio[" << msg->audio << "] video[" << msg->video << "] log_id["<<msg->log_id <<"] worker receive msg, worker_id: " << _worker_id;
+
+        switch (msg->cmdno)
+        {
+        case CMDNO_PUSH:
+            _process_push(msg);
+         break;
+        default:
+            RTC_LOG(LS_WARNING) << "unknown cmdno: " << msg->cmdno << ", log_id" << msg->log_id;
+         break;
+        }
+
+   }
+
+   // 处理push消息
+   void RtcWorker::_process_push(std::shared_ptr<RtcMsg> msg)
+   {
+
+   }
 
 } // namespace grtc

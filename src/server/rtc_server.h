@@ -49,6 +49,8 @@ namespace grtc
         void _process_rtc_msg();
         //创建工作worker
         int _create_worker(int worker_id);
+        //通过stream_name hash的方式获取worker
+        RtcWorker* _get_worker(const std::string& stream_name);
         
     private:
         EventLoop *_el;
