@@ -1,6 +1,7 @@
 #include "server/rtc_worker.h"
 #include <rtc_base/logging.h>
 #include <unistd.h>
+#include "server/signaling_worker.h"
 namespace grtc
 {
    RtcWorker::RtcWorker(int worker_id, const RtcServerOptions &options)
@@ -144,7 +145,12 @@ namespace grtc
    // 处理push消息
    void RtcWorker::_process_push(std::shared_ptr<RtcMsg> msg)
    {
-
+         std::string offer = "offer";
+         msg->sdp = offer;
+         SignalingWorker* worker = (SignalingWorker*) msg->worker;
+         if(worker){
+            worker->send_rtc_msg(msg);
+         }
    }
 
 } // namespace grtc

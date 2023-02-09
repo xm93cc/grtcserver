@@ -295,6 +295,7 @@ CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../../rtcbase/src/r
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../src/base/event_loop.h
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../src/base/lock_free_queue.h
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../src/base/socket.h
+CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../src/grtcserver_def.h
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../src/server/signaling_server.h
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../src/server/signaling_worker.h
 CMakeFiles/grtcserver.dir/src/server/signaling_server.cpp.o: ../third_party/include/absl/base/attributes.h

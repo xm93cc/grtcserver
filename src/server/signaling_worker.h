@@ -8,6 +8,9 @@
 #include<thread>
 #include"server/signaling_server.h"
 #include<json/json.h>
+#include<queue>
+#include<mutex>
+#include"grtcserver_def.h"
 namespace grtc{
 class TcpConnection;
 class SignalingWorker{
@@ -28,11 +31,14 @@ class SignalingWorker{
         void _process_timeout(TcpConnection* c);
         //处理推流
         int _process_push(int cmdno,TcpConnection* c,const Json::Value& root,uint32_t log_id);
+        //响应服务端offer
+        void  _response_server_offer(std::shared_ptr<RtcMsg> msg);
     
     public:
         enum{
             QUIT = 0,
-            NEW_CONN = 1
+            NEW_CONN = 1,
+            RTC_MSG = 2
         };
         SignalingWorker(int worker_id,SignalingServerOptions& options);
         ~SignalingWorker();
@@ -42,6 +48,14 @@ class SignalingWorker{
         int notify(int msg);
         bool start();
         int notify_new_conn(int fd);
+        //将rtc msg 从其他历程推送到signaling worker
+        int send_rtc_msg(std::shared_ptr<RtcMsg> msg);
+        //向队列push msg
+        void push_msg(std::shared_ptr<RtcMsg> msg);
+        //从队列弹出 msg
+        std::shared_ptr<RtcMsg> pop_msg();
+        //处理队列中的RtcMsg
+        void _process_rtc_msg();
         friend void signaling_worker_recv_notify(EventLoop* el,IOWatcher* w,int fd, int events,void* data);
         friend void conn_io_cb (EventLoop* el,IOWatcher* w,int fd, int events,void* data);
         friend void conn_timeout_cb(EventLoop* el,TimerWatcher* w,void* data);
@@ -55,6 +69,8 @@ class SignalingWorker{
         LockFreeQueue<int> _q_conn;
         std::vector<TcpConnection*> _conns;
         SignalingServerOptions _options;
+        std::queue<std::shared_ptr<RtcMsg>> _q_msg;
+        std::mutex _q_msg_mtx;
 };
 
 
