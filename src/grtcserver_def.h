@@ -6,6 +6,7 @@
 #define CMDNO_ANSWER   3
 #define CMDNO_STOPPUSH 4
 #define CMDNO_STOPPULL 5
+#define MAX_RES_BUF 4096
 
 namespace grtc
 {
@@ -20,6 +21,7 @@ namespace grtc
         void* conn = nullptr;
         std::string sdp;
         int err_no = 0;
+        int fd = 0;
     };
 } // namespace grtc
 

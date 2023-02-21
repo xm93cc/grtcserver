@@ -13,6 +13,8 @@ namespace grtc{
     int sock_peer_2_str(int fd,char* host,int* port);
     //从fd（sock）中读取指定长度的字节数据，返回实际读取到字节数，-1为异常情况
     int sock_read_data(int sock,char* buf,size_t len);
+    //向连接中写入数据
+    int sock_write_data(int sock,const char* buf,size_t len);
 
 }//namespace grtc
 

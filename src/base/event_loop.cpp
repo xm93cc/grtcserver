@@ -92,14 +92,14 @@ namespace grtc
     }
 
     // mask 等同 select中的mask
-    void EventLoop::strart_io_event(IOWatcher *w, int fd, int mask)
+    void EventLoop::start_io_event(IOWatcher *w, int fd, int mask)
     {
         struct ev_io *io = &(w->io);
         if (ev_is_active(io))
         {
-            int active_events = TRANS_FROM_EV_MASK(io->active);
+            int active_events = TRANS_FROM_EV_MASK(io->events);
             int events = active_events | mask;
-            if (events == mask)
+            if (events == active_events)
             {
                 return;
             }
@@ -122,8 +122,8 @@ namespace grtc
     void EventLoop::stop_io_event(IOWatcher *w, int fd, int mask)
     {
         struct ev_io *io = &(w->io);
-        int activ_event = TRANS_FROM_EV_MASK(io->active);
-        int events = activ_event | ~mask;
+        int activ_event = TRANS_FROM_EV_MASK(io->events);
+        int events = activ_event & ~mask;
         if (activ_event == events)
         {
             return;

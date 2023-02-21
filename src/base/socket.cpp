@@ -145,5 +145,19 @@ namespace grtc{
        return ret;
    }
 
+   int sock_write_data(int sock,const char* buf,size_t len){
+        int ret = write(sock,buf,len);
+        if(-1 == ret){
+            if(EAGAIN == errno){
+                return 0;
+            }else{
+                RTC_LOG(LS_WARNING) << "sock read failed, error: "<< strerror(errno) << " , errno: "<< errno << " , sock: "<<sock;
+                return -1;
+            }
+        }
+
+        return ret;
+   }
+
 
 } // namespace grtc

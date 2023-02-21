@@ -54,7 +54,7 @@ namespace grtc
         _notify_recv_fd = fds[0];
         _notify_send_fd = fds[1];
         _pipe_watcher = _el->create_io_event(rtc_server_recv_notify, this);
-        _el->strart_io_event(_pipe_watcher,_notify_recv_fd,EventLoop::READ);
+        _el->start_io_event(_pipe_watcher,_notify_recv_fd,EventLoop::READ);
         for(int i = 0; i < _options.worker_num; i++){
             if(_create_worker(i) != 0){
                 return -1;

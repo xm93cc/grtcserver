@@ -87,7 +87,7 @@ namespace grtc
         _notify_recv_fd = fd[0];
         _notify_send_fd = fd[1];
         _pipe_watcher = _el->create_io_event(signaling_server_recv_notify, this);
-        _el->strart_io_event(_pipe_watcher, _notify_recv_fd, EventLoop::READ);
+        _el->start_io_event(_pipe_watcher, _notify_recv_fd, EventLoop::READ);
         //注册tcp连接事件
         _listen_fd = create_tcp_server(_options.host.c_str(), _options.port);
         if(-1 == _listen_fd){
@@ -95,7 +95,7 @@ namespace grtc
             return -1;
         }
         _io_watcher = _el->create_io_event(accept_new_conn,this);
-        _el->strart_io_event(_io_watcher,_listen_fd,EventLoop::READ);
+        _el->start_io_event(_io_watcher,_listen_fd,EventLoop::READ);
 
         // create worker 
         for (int i = 0; i < _options.worker_num; i++)

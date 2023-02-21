@@ -39,7 +39,7 @@ namespace grtc
       _notify_send_fd = fds[1];
       _pipe_watcher = _el->create_io_event(rtc_worker_recv_notify, this);
       // 开始事件
-      _el->strart_io_event(_pipe_watcher, _notify_recv_fd, EventLoop::READ);
+      _el->start_io_event(_pipe_watcher, _notify_recv_fd, EventLoop::READ);
       return 0;
    }
 

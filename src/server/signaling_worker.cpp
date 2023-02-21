@@ -6,6 +6,7 @@
 #include"server/tcp_connection.h"
 #include"grtcserver_def.h"
 #include"server/rtc_server.h"
+#include<rtc_base/zmalloc.h>
 extern grtc::RtcServer* g_rtc_server;
 namespace grtc
 {
@@ -51,7 +52,7 @@ namespace grtc
         _notify_send_fd = fds[1];
         _pipe_watcher = _el->create_io_event(signaling_worker_recv_notify, this);
         //开始事件
-        _el->strart_io_event(_pipe_watcher,_notify_recv_fd,EventLoop::READ);
+        _el->start_io_event(_pipe_watcher,_notify_recv_fd,EventLoop::READ);
         return 0;
     }
 
@@ -71,7 +72,57 @@ namespace grtc
     }
      //响应服务端offer
     void SignalingWorker::_response_server_offer(std::shared_ptr<RtcMsg> msg){
-        RTC_LOG(LS_WARNING) << "========= response server offer: " << msg->sdp;
+        TcpConnection *c = (TcpConnection *)(msg->conn);
+
+        if (!c)
+        {
+           return;
+        }
+
+        // 透传TcpConnection 主要是避免在高并发时，当前操作的描述符被新的连接所覆盖 将旧的数据写到新的描述符
+        // msg中透传文件描述符主要判定tcp连接超时被释放问题，指针操作被释放的内存可能出现问题
+        int fd = msg->fd;
+        if (fd <= 0 || size_t(fd) >= _conns.size()){
+           return;
+        }
+
+        if (_conns[fd] != c){
+           return;
+        }
+
+        ghead_t *xh = (ghead_t *)(c->querybuf);
+        rtc::Slice header(c->querybuf, GHEAD_SIZE);
+        char *buf = (char *)zmalloc(GHEAD_SIZE + MAX_RES_BUF);
+        if (!buf){
+           RTC_LOG(LS_WARNING) << "zmalloc error, log_id: " << xh->log_id;
+           return;
+        }
+        memcpy(buf,header.data(),GHEAD_SIZE);
+        ghead_t* res_xh = (ghead_t*)buf;
+        Json::Value res_root;
+        res_root["error_no"] = msg->err_no;
+        if(msg->err_no != 0){
+            res_root["err_msg"] = "process error";
+            res_root["offer"] = "";
+        }else{
+            res_root["err_msg"] = "success";
+            res_root["offer"] = msg->sdp;
+        }
+        Json::StreamWriterBuilder write_builder;
+        write_builder.settings_["indentation"] = "";
+        std::string json_data = Json::writeString(write_builder, res_root);
+        RTC_LOG(LS_INFO) << "response body: " << json_data;
+        res_xh->body_len = json_data.size();
+        snprintf(buf + GHEAD_SIZE, MAX_RES_BUF, "%s", json_data.c_str());
+        rtc::Slice reply(buf, GHEAD_SIZE + res_xh->body_len);//组合数据包结构
+        _add_reply(c,reply);
+
+
+    }
+
+    void SignalingWorker::_add_reply(TcpConnection* c, const rtc::Slice& reply){
+        c->reply_list.push_back(reply);
+        _el->start_io_event(c->io_watcher, c->fd, EventLoop::WRITE);
     }
 
     //处理队列中的RtcMsg
@@ -259,6 +310,7 @@ namespace grtc
         msg->log_id = log_id;
         msg->worker = this;
         msg->conn = c;
+        msg->fd = c->fd;
         return g_rtc_server->send_rtc_msg(msg);
     }
 
@@ -268,8 +320,49 @@ namespace grtc
             worker->_read_query(fd);
             return;
         }
+        if(events & EventLoop::WRITE){
+            worker->_write_reply(fd);
+        }
 
     }
+
+
+    void SignalingWorker::_write_reply(int fd){
+        if(fd <= 0 || (size_t)fd >= _conns.size()){
+            return;
+        }
+        TcpConnection* c= _conns[fd];
+        if(!c){
+            return;
+        }
+
+        while (!c->reply_list.empty())
+        {
+            rtc::Slice reply = c->reply_list.front();
+            int nwrtten = sock_write_data(c->fd, reply.data() + c->cur_resp_pos, reply.size() - c->cur_resp_pos);
+            if(-1 == nwrtten){
+                _close_conn(c);
+                return;
+            }else if(0 == nwrtten){
+                RTC_LOG(LS_WARNING) << "write zero bytes, fd: " << c->fd << " worker_id: " << _worker_id;
+            }else if((nwrtten + c->cur_resp_pos) >= reply.size()){
+                //写入完成
+                c->reply_list.pop_front();
+                zfree((void*)reply.data());
+                c->cur_resp_pos = 0;
+                RTC_LOG(LS_INFO) << "write finished, fd: "<< c->fd << ", worker_id: " << _worker_id;
+            }else{
+                c->cur_resp_pos += nwrtten;
+            }
+        }
+        c->last_interaction = _el->now();
+        if(c->reply_list.empty()){
+            _el->stop_io_event(c->io_watcher, c->fd , EventLoop::WRITE);
+            RTC_LOG(LS_INFO) << "stop write event, fd: "<< c->fd << ", worker_id: " << _worker_id;
+        }
+        
+    }
+
     //定时器回调
     void conn_timeout_cb(EventLoop* el,TimerWatcher* /*w*/,void* data){
         SignalingWorker* worker = (SignalingWorker*)el->owner();
@@ -299,7 +392,7 @@ namespace grtc
         sock_peer_2_str(fd,tcpconn->ip,&(tcpconn->port));
         //启动事件监听
         tcpconn->io_watcher = _el->create_io_event(conn_io_cb,this);
-        _el->strart_io_event(tcpconn->io_watcher,fd,EventLoop::READ);
+        _el->start_io_event(tcpconn->io_watcher,fd,EventLoop::READ);
         //启动定时器 
         tcpconn->timer_watcher = _el->create_timer(conn_timeout_cb,tcpconn,true);
         _el->start_timer(tcpconn->timer_watcher,100000);//100ms

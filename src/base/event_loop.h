@@ -26,7 +26,7 @@ namespace grtc
         void start();
         void stop();
         IOWatcher* create_io_event(io_cb_t cb,void* data);
-        void strart_io_event(IOWatcher* w,int fd, int mask);
+        void start_io_event(IOWatcher* w,int fd, int mask);
         void stop_io_event(IOWatcher* w,int fd, int mask);
         void delete_io_event(IOWatcher* w);
         TimerWatcher* create_timer(time_cb_t cb, void* data, bool need_repeat);
