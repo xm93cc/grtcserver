@@ -6,8 +6,10 @@ namespace grtc
     class PushStream : public RtcStream{
     public:
          PushStream(EventLoop* el,uint64_t uid, const std::string& stream_name
-                                , bool audio, bool video, uint32_t log_id, std::string& offer);
-         ~PushStream();
+                                , bool audio, bool video, uint32_t log_id);
+         ~PushStream() override;
+         //创建offer
+         std::string create_offer() override;
     };
 } // namespace grtc
 

@@ -5,7 +5,7 @@
 namespace grtc
 {
    RtcWorker::RtcWorker(int worker_id, const RtcServerOptions &options)
-       : _worker_id(worker_id), _el(new EventLoop(this)),_options(options) {}
+       : _worker_id(worker_id), _el(new EventLoop(this)),_options(options), _rtc_stream_mgr(new RtcStreamManager(_el)) {}
    RtcWorker::~RtcWorker() {
       if(_el){
          delete _el;
@@ -145,7 +145,9 @@ namespace grtc
    // 处理push消息
    void RtcWorker::_process_push(std::shared_ptr<RtcMsg> msg)
    {
-         std::string offer = "offer";
+         std::string offer;
+         _rtc_stream_mgr->create_push_stream(msg->uid, msg->stream_name, msg->audio, msg->video, msg->log_id, offer);
+         RTC_LOG(LS_INFO) << "offer:  " << offer;
          msg->sdp = offer;
          SignalingWorker* worker = (SignalingWorker*) msg->worker;
          if(worker){

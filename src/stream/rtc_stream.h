@@ -2,6 +2,8 @@
 #define __RTC_STREAM_H_
 #include"base/event_loop.h"
 #include<string>
+#include<memory>
+#include "pc/peer_connection.h"
 namespace grtc
 {
     /**
@@ -13,8 +15,9 @@ namespace grtc
     class RtcStream{
     public:
         RtcStream(EventLoop* el,uint64_t uid, const std::string& stream_name
-                                , bool audio, bool video, uint32_t log_id, std::string& offer);
+                                , bool audio, bool video, uint32_t log_id);
         virtual ~RtcStream();
+        virtual std::string create_offer() = 0;
     protected:
         EventLoop* el;
         uint64_t uid;
@@ -22,7 +25,7 @@ namespace grtc
         bool audio;
         bool video;
         uint32_t log_id;
-        std::string offer;
+        std::unique_ptr<PeerConnection> pc;
     };
 } // namespace grtc
 

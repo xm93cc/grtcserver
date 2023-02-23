@@ -4,6 +4,7 @@
 #include "server/rtc_server.h"
 #include "base/lock_free_queue.h"
 #include "grtcserver_def.h"
+#include"stream/rtc_stream_manager.h"
 namespace grtc
 {
     class RtcWorker
@@ -17,6 +18,7 @@ namespace grtc
         int _notify_send_fd = -1;
         RtcServerOptions _options;
         LockFreeQueue<std::shared_ptr<RtcMsg>> _q_msg;
+        std::unique_ptr<RtcStreamManager> _rtc_stream_mgr;
     private:
         //关闭描述符，事件循环，线程
         void _stop();
