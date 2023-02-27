@@ -11,6 +11,7 @@ namespace grtc
     {
         bool recv_audio = true;
         bool recv_video = true;
+        bool use_rtp_mux = true; // 是否使用bundle（音视频复用通道）
     };
     class PeerConnection
     {
@@ -22,7 +23,7 @@ namespace grtc
         PeerConnection(EventLoop *el);
         ~PeerConnection();
         // 创建offer
-        std::string create_offer(const RTCOfferAnswerOptions& options);
+        std::string create_offer(const RTCOfferAnswerOptions &options);
     };
 
 } // namespace grtc
