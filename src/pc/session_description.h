@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include "pc/codec_info.h"
 namespace grtc
 {
     enum class SdpType
@@ -23,11 +24,17 @@ namespace grtc
         virtual ~MediaContentDescription() {}
         virtual MediaType type() = 0;
         virtual std::string mid() = 0;
+        const std::vector<std::shared_ptr<CodecInfo>>& get_codes() const {
+            return _codecs;
+        }
+    protected:
+        std::vector<std::shared_ptr<CodecInfo>> _codecs;
     };
 
     class AudioContentDescription : public MediaContentDescription
     {
     public:
+        AudioContentDescription();
         MediaType type() override { return MediaType::MEDIA_TYPE_AUDIO; }
         std::string mid() override { return "audio"; }
     };
@@ -35,6 +42,7 @@ namespace grtc
     class VideoContentDescription : public MediaContentDescription
     {
     public:
+        VideoContentDescription();
         MediaType type() override { return MediaType::MEDIA_TYPE_VIDEO; }
         std::string mid() override { return "video"; }
     };

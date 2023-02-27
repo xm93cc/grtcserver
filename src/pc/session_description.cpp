@@ -3,6 +3,10 @@
 #include <sstream>
 namespace grtc
 {
+
+const char k_media_protocol_dtls_savpf[] = "UDP/TLS/RTP/SAVPF";
+const char k_meida_protocol_savpf[] = "RTP/SAVPF";
+
     bool ContentGroup::has_content_name(const std::string& content_name){
         for(auto name : _content_names){
             if(name == content_name){
@@ -44,6 +48,29 @@ namespace grtc
         return content_group;
     }
 
+    AudioContentDescription::AudioContentDescription(){
+        auto audio_codec = std::make_shared<AudioCodecInfo>();
+        audio_codec->id = 111;
+        audio_codec->channels = 2;//双声道
+        audio_codec->clockrate = 48000; //音频采样
+        audio_codec->name = "opus";
+        _codecs.push_back(audio_codec);
+    }
+
+    VideoContentDescription::VideoContentDescription(){
+        auto codec = std::make_shared<VideoCodecInfo>();
+        codec->clockrate = 90000; //视频采样率
+        codec->id = 107;
+        codec->name = "H264";
+
+        auto rtx_codec = std::make_shared<VideoCodecInfo>();
+        rtx_codec->id = 99;
+        rtx_codec->clockrate = 90000;
+        rtx_codec->name = "rtx";
+
+        _codecs.push_back(codec);
+        _codecs.push_back(rtx_codec);
+    }
     std::string SessionDescription::to_string()
     {
         std::stringstream ss;
@@ -69,7 +96,20 @@ namespace grtc
             ss << "\r\n";
         }
 
-
+        //RFC 4566
+        //m=<media> <port> <proto> <fmt>
+         ss << "a=msid-semantic: WMS\r\n";
+        for(auto content : _contents){
+            std::string fmt;
+            for(auto codec : content->get_codes()){
+                fmt.append(" ");
+                fmt.append(std::to_string(codec->id));
+            }
+            
+            ss << "m=" << content->mid() << " 9 " << k_media_protocol_dtls_savpf << fmt << "\r\n";
+            ss << "c=IN IP4 0.0.0.0\r\n";
+            ss << "a=rtcp:9 IN IP4 0.0.0.0\r\n";
+        }
         return ss.str();
     }
 
