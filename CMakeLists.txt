@@ -19,6 +19,8 @@ file(GLOB all_src
     "./src/*.cpp"
     "./src/server/*.cpp"
     "./src/base/*.cpp"
+    "./src/stream/*.cpp"
+    "./src/pc/*.cpp"
 )
 
 
