@@ -2,6 +2,17 @@
 #include "pc/peer_connection.h"
 namespace grtc
 {
+    static RtpDirection get_direction(bool send, bool recv){
+        if(send && recv){
+            return RtpDirection::k_send_recv;
+        } else if (send && !recv){
+            return RtpDirection::k_send_only;
+        } else if (!send && recv){
+            return RtpDirection::k_recv_only;
+        }else{
+            return RtpDirection::k_inactive;
+        }
+    }
     PeerConnection::PeerConnection(EventLoop *el) : _el(el)
     {
     }
@@ -16,12 +27,16 @@ namespace grtc
         if (options.recv_audio)
         {
             auto audio = std::make_shared<AudioContentDescription>();
+            audio->set_direction(get_direction(options.send_audio, options.recv_audio));
+            audio->set_rtcp_mux(options.use_rtcp_mux);
             _local_desc->add_content(audio);
         }
 
         if (options.recv_video)
         {
             auto video = std::make_shared<VideoContentDescription>();
+            video->set_direction(get_direction(options.send_video, options.recv_video));
+            video->set_rtcp_mux(options.use_rtcp_mux);
             _local_desc->add_content(video);
         }
 

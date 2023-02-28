@@ -12,6 +12,9 @@ namespace grtc
         bool recv_audio = true;
         bool recv_video = true;
         bool use_rtp_mux = true; // 是否使用bundle（音视频复用通道）
+        bool send_audio = true;
+        bool send_video = true;
+        bool use_rtcp_mux = true;
     };
     class PeerConnection
     {
