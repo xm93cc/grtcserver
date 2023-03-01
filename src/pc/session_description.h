@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include "pc/codec_info.h"
+#include "ice/ice_credentials.h"
 namespace grtc
 {
     enum class SdpType
@@ -75,6 +76,13 @@ namespace grtc
         std::vector<std::string> _content_names;
     };
 
+    class TransportDescription{
+        public:
+            std::string ice_ufrag;
+            std::string ice_pwd;
+            std::string mid;
+    };
+
 
     class SessionDescription
     {
@@ -82,6 +90,7 @@ namespace grtc
         SdpType _sdp_type;
         std::vector<std::shared_ptr<MediaContentDescription>> _contents;
         std::vector<ContentGroup> _content_groups;
+        std::vector<std::shared_ptr<TransportDescription>> _transport_infos;
     public:
         SessionDescription(SdpType type);
         ~SessionDescription();
@@ -91,6 +100,10 @@ namespace grtc
         inline const std::vector<std::shared_ptr<MediaContentDescription>>& contents() const {return _contents;}
         void add_group(const ContentGroup& group);
         std::vector<const ContentGroup*>  get_group_by_name(const std::string& name) const;
+        //设置sdp ice ufrag pwd 属性  用于连接安全  
+        bool add_transport_info(const std::string& mid, const IceParameters& ice_param);
+        std::shared_ptr<TransportDescription> get_transport_info(const std::string& mid);
+
     };
 
 } // namespace grtc

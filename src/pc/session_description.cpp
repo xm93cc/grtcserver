@@ -145,6 +145,27 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
             }
     }
 
+    bool SessionDescription::add_transport_info(const std::string& mid, const IceParameters& ice_param){
+        auto transport = std::make_shared<TransportDescription>();
+        transport->ice_pwd = ice_param.ice_pwd;
+        transport->ice_ufrag = ice_param.ice_ufrag;
+        transport->mid = mid;
+        _transport_infos.push_back(transport);
+        return true;
+    }
+
+    std::shared_ptr<TransportDescription> SessionDescription::get_transport_info(const std::string& mid){
+        for (auto tdesc : _transport_infos)
+        {
+            if(tdesc->mid == mid){
+                return tdesc;
+            }
+        }
+
+        return nullptr;
+        
+    }
+
     std::string SessionDescription::to_string()
     {
         std::stringstream ss;
@@ -183,6 +204,11 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
             ss << "m=" << content->mid() << " 9 " << k_media_protocol_dtls_savpf << fmt << "\r\n";
             ss << "c=IN IP4 0.0.0.0\r\n";
             ss << "a=rtcp:9 IN IP4 0.0.0.0\r\n";
+            auto transport_info = get_transport_info(content->mid());
+            if(transport_info){
+                ss << "a=ice-ufrag:" << transport_info->ice_ufrag << "\r\n";
+                ss << "a=ice-pwd:" << transport_info->ice_pwd << "\r\n";
+            }
             ss << "a=mid:" << content->mid() << "\r\n";
             build_rtp_direction(content, ss);
             if (content->rtcp_mux()){
