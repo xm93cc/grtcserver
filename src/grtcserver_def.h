@@ -22,6 +22,7 @@ namespace grtc
         std::string sdp;
         int err_no = 0;
         int fd = 0;
+        void* certificate = nullptr;
     };
 } // namespace grtc
 

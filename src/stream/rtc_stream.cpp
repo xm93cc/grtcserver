@@ -11,4 +11,8 @@ namespace grtc
     RtcStream::~RtcStream()
     {
     }
+    
+    int RtcStream::start(rtc::RTCCertificate* certificate){
+        return pc->init(certificate);
+    }
 } // namespace grtc

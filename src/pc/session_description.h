@@ -1,5 +1,7 @@
 #ifndef __SESSION_DESCRIPTION_H_
 #define __SESSION_DESCRIPTION_H_
+#include <rtc_base/rtc_certificate.h>
+#include <rtc_base/ssl_fingerprint.h>
 #include <string>
 #include <memory>
 #include <vector>
@@ -81,6 +83,7 @@ namespace grtc
             std::string ice_ufrag;
             std::string ice_pwd;
             std::string mid;
+            std::unique_ptr<rtc::SSLFingerprint> identity_fingerprint; //指纹信息
     };
 
 
@@ -101,7 +104,7 @@ namespace grtc
         void add_group(const ContentGroup& group);
         std::vector<const ContentGroup*>  get_group_by_name(const std::string& name) const;
         //设置sdp ice ufrag pwd 属性  用于连接安全  
-        bool add_transport_info(const std::string& mid, const IceParameters& ice_param);
+        bool add_transport_info(const std::string& mid, const IceParameters& ice_param, rtc::RTCCertificate* certificate);
         std::shared_ptr<TransportDescription> get_transport_info(const std::string& mid);
 
     };

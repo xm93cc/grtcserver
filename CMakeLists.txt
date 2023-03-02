@@ -29,5 +29,5 @@ add_executable(grtcserver ${all_src})
 
 target_link_libraries(grtcserver libyaml-cpp.a librtcbase.a 
     libabsl_strings.a libabsl_throw_delegate.a libev.a libjsoncpp.a
-    libcrypto.a -lpthread -ldl
+    libssl.a libcrypto.a -lpthread -ldl
 )

@@ -1,6 +1,7 @@
 // impl session_description.h
 #include "pc/session_description.h"
 #include <sstream>
+#include <rtc_base/logging.h>
 namespace grtc
 {
 
@@ -145,11 +146,18 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
             }
     }
 
-    bool SessionDescription::add_transport_info(const std::string& mid, const IceParameters& ice_param){
+    bool SessionDescription::add_transport_info(const std::string& mid, const IceParameters& ice_param, rtc::RTCCertificate* certificate){
         auto transport = std::make_shared<TransportDescription>();
         transport->ice_pwd = ice_param.ice_pwd;
         transport->ice_ufrag = ice_param.ice_ufrag;
         transport->mid = mid;
+        if(certificate){
+            transport->identity_fingerprint = rtc::SSLFingerprint::CreateFromCertificate(*certificate);
+            if(!transport->identity_fingerprint){
+                RTC_LOG(LS_WARNING) << "get fingerprint failed";
+                return false;
+            }
+        }
         _transport_infos.push_back(transport);
         return true;
     }
@@ -208,6 +216,10 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
             if(transport_info){
                 ss << "a=ice-ufrag:" << transport_info->ice_ufrag << "\r\n";
                 ss << "a=ice-pwd:" << transport_info->ice_pwd << "\r\n";
+                auto fp = transport_info->identity_fingerprint.get();
+                if(fp){
+                    ss << "a=fingerprint:" << fp->algorithm << " " << fp->GetRfc4572Fingerprint() << "\r\n";
+                }
             }
             ss << "a=mid:" << content->mid() << "\r\n";
             build_rtp_direction(content, ss);

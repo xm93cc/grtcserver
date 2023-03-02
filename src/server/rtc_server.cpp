@@ -4,8 +4,12 @@
 #include <unistd.h>
 #include "server/rtc_worker.h"
 #include <rtc_base/crc32.h>
+#include <rtc_base/rtc_certificate_generator.h>
 namespace grtc
 {
+
+    const uint64_t k_year_in_ms = 365 * 24 * 3600 * 1000L;
+
     RtcServer::RtcServer():_el(new EventLoop(this)){}
     RtcServer::~RtcServer(){
       if(_el){
@@ -33,6 +37,24 @@ namespace grtc
         server->_process_notify(msg); 
     }
 
+    int RtcServer::_generate_and_check_certificate(){
+        if(!_certificate || _certificate->HasExpired(time(NULL) * 1000)){
+            rtc::KeyParams key_params;
+            _certificate = rtc::RTCCertificateGenerator::GenerateCertificate(key_params, k_year_in_ms);
+            if(_certificate){
+             rtc::RTCCertificatePEM pem = _certificate->ToPEM();
+             RTC_LOG(LS_INFO) << "rtc certificate: \n"
+                              << pem.certificate();
+            }
+        }
+
+        if(!_certificate){
+            RTC_LOG(LS_WARNING) << "get certificate error";
+            return -1;
+        }
+        return 0;
+    }
+
     int RtcServer::init(const char* conf_path){
         if(!conf_path){
             RTC_LOG(LS_WARNING) << "conf_file is null";
@@ -43,6 +65,9 @@ namespace grtc
             _options.worker_num = config["worker_num"].as<int>();
         }catch(YAML::Exception& e){
             RTC_LOG(LS_WARNING) << "rtc server load conf file error: " << e.msg;
+            return -1;
+        }
+        if(_generate_and_check_certificate() != 0){
             return -1;
         }
         //创建管道
@@ -178,7 +203,11 @@ namespace grtc
         if(!msg){
             return;
         }
-
+        //分配worker 时检查证书是否有效
+        if(_generate_and_check_certificate() != 0){
+            return;
+        }
+        msg->certificate = _certificate.get();
         RtcWorker* worker = _get_worker(msg->stream_name);
         if(worker){
             worker->send_rtc_msg(msg);

@@ -5,6 +5,7 @@
 #include "grtcserver_def.h"
 #include <queue>
 #include <mutex>
+#include <rtc_base/rtc_certificate.h>
 namespace grtc
 {
     struct RtcServerOptions
@@ -39,6 +40,8 @@ namespace grtc
         void push_msg(std::shared_ptr<RtcMsg> msg); 
         //弹出消息
         std::shared_ptr<RtcMsg> pop_msg();
+        //检查证书是否过期
+        int _generate_and_check_certificate();
         friend void rtc_server_recv_notify(EventLoop* /*el*/,IOWatcher* /*w*/,int fd, int /*events*/,void* data);
     private:
         //处理通知(管道)
@@ -64,6 +67,7 @@ namespace grtc
         std::queue<std::shared_ptr<RtcMsg>> _q_msg;
         std::mutex _q_msg_mtx;
         std::vector<RtcWorker*> _workers;
+        rtc::scoped_refptr<rtc::RTCCertificate> _certificate;
 
     };
 } // namespace grtc

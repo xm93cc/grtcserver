@@ -1,6 +1,8 @@
 // impl peer_connection.h
+#include <rtc_base/rtc_certificate.h>
 #include "pc/peer_connection.h"
 #include "ice/ice_credentials.h"
+#include <rtc_base/logging.h>
 namespace grtc
 {
     static RtpDirection get_direction(bool send, bool recv){
@@ -24,6 +26,10 @@ namespace grtc
 
     std::string PeerConnection::create_offer(const RTCOfferAnswerOptions &options)
     {
+        if(options.dtls_on && !_certificate){
+            RTC_LOG(LS_WARNING) << "certifiate is null";
+            return "";
+        }
         _local_desc = std::make_unique<SessionDescription>(SdpType::k_offer);
         IceParameters ice_param = IceCredentials::create_random_ice_credentials();
         if (options.recv_audio)
@@ -32,7 +38,7 @@ namespace grtc
             audio->set_direction(get_direction(options.send_audio, options.recv_audio));
             audio->set_rtcp_mux(options.use_rtcp_mux);
             _local_desc->add_content(audio);
-            _local_desc->add_transport_info(audio->mid(), ice_param);
+            _local_desc->add_transport_info(audio->mid(), ice_param, _certificate);
         }
 
         if (options.recv_video)
@@ -41,7 +47,7 @@ namespace grtc
             video->set_direction(get_direction(options.send_video, options.recv_video));
             video->set_rtcp_mux(options.use_rtcp_mux);
             _local_desc->add_content(video);
-            _local_desc->add_transport_info(video->mid(), ice_param);
+            _local_desc->add_transport_info(video->mid(), ice_param, _certificate);
         }
 
         if(options.use_rtp_mux){
@@ -54,5 +60,10 @@ namespace grtc
             }
         }
         return _local_desc->to_string();
+    }
+
+    int PeerConnection::init(rtc::RTCCertificate* certificate){
+        _certificate = certificate;
+        return 0;
     }
 } // namespace grtc

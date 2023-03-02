@@ -146,7 +146,7 @@ namespace grtc
    void RtcWorker::_process_push(std::shared_ptr<RtcMsg> msg)
    {
          std::string offer;
-         _rtc_stream_mgr->create_push_stream(msg->uid, msg->stream_name, msg->audio, msg->video, msg->log_id, offer);
+         _rtc_stream_mgr->create_push_stream(msg->uid, msg->stream_name, msg->audio, msg->video, msg->log_id,(rtc::RTCCertificate*)(msg->certificate) , offer);
          RTC_LOG(LS_INFO) << "offer:  " << offer;
          msg->sdp = offer;
          SignalingWorker* worker = (SignalingWorker*) msg->worker;

@@ -1,5 +1,6 @@
 #ifndef __RTC_STREAM_H_
 #define __RTC_STREAM_H_
+#include<rtc_base/rtc_certificate.h>
 #include"base/event_loop.h"
 #include<string>
 #include<memory>
@@ -17,6 +18,7 @@ namespace grtc
         RtcStream(EventLoop* el,uint64_t uid, const std::string& stream_name
                                 , bool audio, bool video, uint32_t log_id);
         virtual ~RtcStream();
+        int start(rtc::RTCCertificate* certificate);
         virtual std::string create_offer() = 0;
     protected:
         EventLoop* el;
