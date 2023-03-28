@@ -146,6 +146,23 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
             }
     }
 
+    static std::string connection_role_to_string(ConnectionRole role)
+    {
+            switch (role)
+            {
+            case ConnectionRole::ACTIVE:
+                return "active";
+            case ConnectionRole::ACTPASS:
+                return "actpass";
+            case ConnectionRole::PASSIVE:
+                return "passive";
+            case ConnectionRole::HOLDCONN:
+                return "holdconn";
+            default:
+                return "none";
+            }
+    }
+
     bool SessionDescription::add_transport_info(const std::string& mid, const IceParameters& ice_param, rtc::RTCCertificate* certificate){
         auto transport = std::make_shared<TransportDescription>();
         transport->ice_pwd = ice_param.ice_pwd;
@@ -157,6 +174,11 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
                 RTC_LOG(LS_WARNING) << "get fingerprint failed";
                 return false;
             }
+        }
+        if(SdpType::k_offer == _sdp_type){
+            transport->Connection_role = ConnectionRole::ACTPASS;
+        }else{
+            transport->Connection_role = ConnectionRole::ACTIVE;
         }
         _transport_infos.push_back(transport);
         return true;
@@ -219,6 +241,7 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
                 auto fp = transport_info->identity_fingerprint.get();
                 if(fp){
                     ss << "a=fingerprint:" << fp->algorithm << " " << fp->GetRfc4572Fingerprint() << "\r\n";
+                    ss << "a=setup:" << connection_role_to_string(transport_info->Connection_role)<< "\r\n";
                 }
             }
             ss << "a=mid:" << content->mid() << "\r\n";

@@ -77,6 +77,14 @@ namespace grtc
         std::string _semantics;
         std::vector<std::string> _content_names;
     };
+    
+    enum ConnectionRole{
+        NONE = 0,
+        ACTIVE,
+        PASSIVE,
+        ACTPASS,
+        HOLDCONN
+    };
 
     class TransportDescription{
         public:
@@ -84,6 +92,7 @@ namespace grtc
             std::string ice_pwd;
             std::string mid;
             std::unique_ptr<rtc::SSLFingerprint> identity_fingerprint; //指纹信息
+            ConnectionRole Connection_role = ConnectionRole::NONE; //DTLS握手 解决谁先发起client hello
     };
 
 
