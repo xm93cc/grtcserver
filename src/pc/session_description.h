@@ -115,6 +115,12 @@ namespace grtc
         //设置sdp ice ufrag pwd 属性  用于连接安全  
         bool add_transport_info(const std::string& mid, const IceParameters& ice_param, rtc::RTCCertificate* certificate);
         std::shared_ptr<TransportDescription> get_transport_info(const std::string& mid);
+        //该媒体是否在bundle中
+        bool is_bundle(const std::string& mid);
+        //获取bundle中第一个媒体信息
+        std::string get_first_bundle_mid();
+        
+
 
     };
 

@@ -17,6 +17,7 @@ public:
     virtual ~IceTransportChannel();
     std::string transport_name() {return _transport_name;}
     IceCandidateComponent component() {return _component;}
+    void gathering_candidate();
 private:
     EventLoop* _el;
     std::string _transport_name;

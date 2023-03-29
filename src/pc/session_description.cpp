@@ -184,6 +184,33 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
         return true;
     }
 
+
+    bool SessionDescription::is_bundle(const std::string& mid){
+        auto content_group = get_group_by_name("BUNDLE");
+        if(content_group.empty()){
+            return false;
+        }
+
+        for(auto group : content_group){
+            for(auto name : group->content_names()){
+                if(name == mid){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+        
+    std::string SessionDescription::get_first_bundle_mid(){
+        auto content_group = get_group_by_name("BUNDLE");
+        if(content_group.empty()){
+            return "";
+        }
+        //todo temp impl
+        return content_group[0]->content_names()[0];
+    }
+
     std::shared_ptr<TransportDescription> SessionDescription::get_transport_info(const std::string& mid){
         for (auto tdesc : _transport_infos)
         {
