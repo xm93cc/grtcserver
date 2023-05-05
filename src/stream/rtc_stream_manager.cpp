@@ -5,7 +5,9 @@
 
 namespace grtc
 {
-    RtcStreamManager::RtcStreamManager(EventLoop* el):el(el){}
+    RtcStreamManager::RtcStreamManager(EventLoop* el)
+    :el(el),_allocator(new PortAllocator())
+    {}
     //free 
     RtcStreamManager::~RtcStreamManager(){}
 
@@ -17,7 +19,7 @@ namespace grtc
             _push_streams.erase(stream_name);
             delete stream;
         }
-        stream = new PushStream(el, uid, stream_name, audio, video, log_id);
+        stream = new PushStream(el,_allocator.get(), uid, stream_name, audio, video, log_id);
         stream->start(certificate);
         offer = stream->create_offer();
         return 0;

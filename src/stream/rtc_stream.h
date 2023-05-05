@@ -5,6 +5,7 @@
 #include<string>
 #include<memory>
 #include "pc/peer_connection.h"
+#include"ice/port_allocator.h"
 namespace grtc
 {
     /**
@@ -15,7 +16,7 @@ namespace grtc
     */
     class RtcStream{
     public:
-        RtcStream(EventLoop* el,uint64_t uid, const std::string& stream_name
+        RtcStream(EventLoop* el,PortAllocator* allocator ,uint64_t uid, const std::string& stream_name
                                 , bool audio, bool video, uint32_t log_id);
         virtual ~RtcStream();
         int start(rtc::RTCCertificate* certificate);
@@ -28,6 +29,7 @@ namespace grtc
         bool video;
         uint32_t log_id;
         std::unique_ptr<PeerConnection> pc;
+        PortAllocator* _allocator;
     };
 } // namespace grtc
 

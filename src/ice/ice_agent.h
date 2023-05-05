@@ -13,7 +13,7 @@ namespace grtc
 {
 class IceAgent{
 public:
-    IceAgent(EventLoop* el);
+    IceAgent(EventLoop* el,PortAllocator* allocator);
     ~IceAgent();
 
     bool create_channel(EventLoop* el, const std::string& transport_name, IceCandidateComponent component);
@@ -28,6 +28,7 @@ private:
 private:
     EventLoop* _el;
     std::vector<IceTransportChannel*> _channels;
+    PortAllocator* _allocator;
 };
 } // namespace grtc
 

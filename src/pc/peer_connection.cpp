@@ -16,7 +16,7 @@ namespace grtc
             return RtpDirection::k_inactive;
         }
     }
-    PeerConnection::PeerConnection(EventLoop *el) : _el(el),_transport_controller(new TransportController(el))
+    PeerConnection::PeerConnection(EventLoop *el, PortAllocator* allocator) : _el(el),_transport_controller(new TransportController(el,allocator))
     {
     }
 

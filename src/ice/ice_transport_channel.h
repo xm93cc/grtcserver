@@ -8,11 +8,12 @@
 #include <vector>
 #include "base/event_loop.h"
 #include "ice/ice_def.h"
+#include "ice/port_allocator.h"
 namespace grtc
 {
 class IceTransportChannel{
 public:
-    IceTransportChannel(EventLoop* el, const std::string& transport_name,
+    IceTransportChannel(EventLoop* el,PortAllocator* allocator, const std::string& transport_name,
                          IceCandidateComponent component);
     virtual ~IceTransportChannel();
     std::string transport_name() {return _transport_name;}
@@ -22,6 +23,7 @@ private:
     EventLoop* _el;
     std::string _transport_name;
     IceCandidateComponent _component;
+    PortAllocator* _allocator;
 };
     
 } // namespace grtc

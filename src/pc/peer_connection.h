@@ -27,7 +27,7 @@ namespace grtc
         rtc::RTCCertificate* _certificate = nullptr;
         std::unique_ptr<TransportController> _transport_controller;
     public:
-        PeerConnection(EventLoop *el);
+        PeerConnection(EventLoop *el, PortAllocator* allocator);
         ~PeerConnection();
         // 创建offer
         std::string create_offer(const RTCOfferAnswerOptions &options);

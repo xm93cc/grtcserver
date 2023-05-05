@@ -4,7 +4,7 @@
 #include <vector>
 #include <rtc_base/ip_address.h>
 
-namespace xrtc {
+namespace grtc {
 
 class Network {
 public:
@@ -36,7 +36,7 @@ private:
     std::vector<Network*> _network_list;
 };
 
-} // namespace xrtc
+} // namespace grtc
 
 #endif  //__BASE_NETWORK_H_
 

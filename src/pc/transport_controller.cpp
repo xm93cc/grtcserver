@@ -8,8 +8,8 @@
 namespace grtc
 {
     
-TransportController::TransportController(EventLoop* el): 
-        _el(el),_ice_agent(new IceAgent(el))
+TransportController::TransportController(EventLoop* el,PortAllocator* allocator): 
+        _el(el),_ice_agent(new IceAgent(el,allocator))
 {
 
 }

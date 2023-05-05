@@ -3,6 +3,7 @@
 #include<string>
 #include"base/event_loop.h"
 #include<unordered_map>
+#include"ice/port_allocator.h"
 namespace grtc
 {
     class PushStream;
@@ -23,6 +24,8 @@ namespace grtc
     private:
         EventLoop* el;
         std::unordered_map<std::string, PushStream*> _push_streams;
+        
+        std::unique_ptr<PortAllocator> _allocator;
         
     };
 } // namespace grtc

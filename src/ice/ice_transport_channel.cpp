@@ -7,9 +7,10 @@
 
 namespace grtc
 {
-IceTransportChannel::IceTransportChannel(EventLoop* el, const std::string& transport_name,
+IceTransportChannel::IceTransportChannel(EventLoop* el,PortAllocator* allocator, const std::string& transport_name,
                          IceCandidateComponent component) :
                     _el(el),
+                    _allocator(allocator),
                     _transport_name(transport_name),
                     _component(component)
 {

@@ -3,7 +3,7 @@
 #include <rtc_base/logging.h>
 #include "base/network.h"
 
-namespace xrtc {
+namespace grtc {
 
 NetworkManager::NetworkManager() = default;
 
@@ -48,6 +48,6 @@ int NetworkManager::create_networks() {
     return 0;
 }
 
-} // namespace xrtc
+} // namespace grtc
 
 
