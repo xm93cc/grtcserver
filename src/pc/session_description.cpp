@@ -34,6 +34,17 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
     void SessionDescription::add_group(const ContentGroup& group){
         _content_groups.push_back(group);
     }
+
+    std::shared_ptr<MediaContentDescription> SessionDescription::get_content(const std::string& mid)
+    {
+        for(auto content : _contents){
+            if(mid == content->mid()){
+                return content;
+            }
+        }
+
+        return nullptr;
+    }
     void SessionDescription::add_content(std::shared_ptr<MediaContentDescription> content)
     {
         _contents.push_back(content);
@@ -77,7 +88,7 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
         // add codec param
         codec->codec_param["level-asymmetry-allowed"] = "1";
         codec->codec_param["packetization-mode"] = "1";
-        codec->codec_param["profile-level-id"] = "42e01";
+        codec->codec_param["profile-level-id"] = "42e01f";
         auto rtx_codec = std::make_shared<VideoCodecInfo>();
         rtx_codec->id = 99;
         rtx_codec->clockrate = 90000;
@@ -223,6 +234,20 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
         
     }
 
+    static void build_candidates(std::shared_ptr<MediaContentDescription> content, std::stringstream& ss)
+    {
+        for(auto c: content->candidates()){
+            ss << "a=candidate:" << c.foundation
+            << " " << c.component 
+            << " " << c.protocol
+            << " " << c.priority 
+            << " " << c.address.HostAsURIString()
+            << " " << c.port
+            << " typ " << c.type
+            << "\r\n";
+        }
+    }
+
     std::string SessionDescription::to_string()
     {
         std::stringstream ss;
@@ -261,6 +286,7 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
             ss << "m=" << content->mid() << " 9 " << k_media_protocol_dtls_savpf << fmt << "\r\n";
             ss << "c=IN IP4 0.0.0.0\r\n";
             ss << "a=rtcp:9 IN IP4 0.0.0.0\r\n";
+            build_candidates(content, ss);
             auto transport_info = get_transport_info(content->mid());
             if(transport_info){
                 ss << "a=ice-ufrag:" << transport_info->ice_ufrag << "\r\n";

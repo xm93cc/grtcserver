@@ -15,7 +15,27 @@ namespace grtc{
     int sock_read_data(int sock,char* buf,size_t len);
     //向连接中写入数据
     int sock_write_data(int sock,const char* buf,size_t len);
+    /*
+     * @Author: XM93CC
+     * @Date: 2023-05-08 15:23:58
+     * @Description: 创建UDP socket 文件描述符
+     */
+    int create_udp_socket(int family);
 
+    /*
+     * @Author: XM93CC
+     * @Date: 2023-05-08 15:45:24
+     * @Description: 绑定socket端口 如果min_port和max_port 都为0时 系统分配一个可用的端口
+     *               如果min_port 和 max_port 值有效 根据这两个参数分配一个有效的端口
+     */     
+
+    int sock_bind(int sock, struct sockaddr* addr, socklen_t len, int min_port, int max_port);
+    /*
+     * @Author: XM93CC
+     * @Date: 2023-05-08 16:02:08
+     * @Description: 通过socket获取地址信息
+     */
+    int sock_get_address(int sock, char* ip, int* port);
 }//namespace grtc
 
 #endif //__BASE_SOCKET_H_

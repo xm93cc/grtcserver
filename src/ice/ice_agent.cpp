@@ -17,6 +17,7 @@ bool IceAgent::create_channel(EventLoop* el, const std::string& transport_name, 
         return true;
     }
     auto channel = new IceTransportChannel(el, _allocator, transport_name, component);
+    channel->signal_candidate_allocate_done.connect(this, &IceAgent::on_candidate_allocate_done);
     _channels.push_back(channel);
     return true;
 }
@@ -34,7 +35,23 @@ std::vector<IceTransportChannel *>::iterator IceAgent::_get_channel(const std::s
         return transport_name == channel->transport_name() && component == channel->component();
     });
 }
+void IceAgent::set_ice_params(const std::string &transport_name, IceCandidateComponent componet,
+                              const IceParameters &ice_parmas)
+{
+    auto channel = get_channel(transport_name,componet);
+    if (channel)
+    {
+        channel->set_ice_params(ice_parmas);
+    }
+    
+}
 
+
+
+void IceAgent::on_candidate_allocate_done(IceTransportChannel* channel, const std::vector<Candidate>& candidates)
+{
+   signal_candidate_allocate_done(this, channel->transport_name(), channel->component(), candidates);
+}
 
 void IceAgent::gathering_candidate(){
     for(auto channel : _channels){

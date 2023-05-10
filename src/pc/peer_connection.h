@@ -19,13 +19,17 @@ namespace grtc
         bool use_rtcp_mux = true;
         bool dtls_on = true;//开启安全传输 
     };
-    class PeerConnection
+    class PeerConnection : public sigslot::has_slots<>
     {
     private:
         EventLoop *_el;
         std::unique_ptr<SessionDescription> _local_desc;
         rtc::RTCCertificate* _certificate = nullptr;
         std::unique_ptr<TransportController> _transport_controller;
+        void on_candidate_allocate_done(TransportController* peer_connection, const std::string& transport_name,
+                                    IceCandidateComponent component, const std::vector<Candidate>& candidates);
+   
+
     public:
         PeerConnection(EventLoop *el, PortAllocator* allocator);
         ~PeerConnection();

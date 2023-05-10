@@ -7,6 +7,7 @@
 #include <vector>
 #include "pc/codec_info.h"
 #include "ice/ice_credentials.h"
+#include "ice/candidate.h"
 namespace grtc
 {
     enum class SdpType
@@ -41,10 +42,13 @@ namespace grtc
         void set_direction(RtpDirection direction){_direction = direction;}
         bool rtcp_mux(){return _rtcp_mux;}
         void set_rtcp_mux(bool rtcp_mux){_rtcp_mux = rtcp_mux;}
+        void add_candidates(const std::vector<Candidate> candidate){_candidates = candidate;}
+        const std::vector<Candidate> candidates(){ return _candidates;}
     protected:
         std::vector<std::shared_ptr<CodecInfo>> _codecs;
         RtpDirection _direction;
         bool _rtcp_mux = true;
+        std::vector<Candidate> _candidates;
     };
 
     class AudioContentDescription : public MediaContentDescription
@@ -102,11 +106,12 @@ namespace grtc
         SdpType _sdp_type;
         std::vector<std::shared_ptr<MediaContentDescription>> _contents;
         std::vector<ContentGroup> _content_groups;
-        std::vector<std::shared_ptr<TransportDescription>> _transport_infos;
+        std::vector<std::shared_ptr<TransportDescription>> _transport_infos;      
     public:
         SessionDescription(SdpType type);
         ~SessionDescription();
         std::string to_string();
+        std::shared_ptr<MediaContentDescription> get_content(const std::string& mid);
         // 添加m（媒体，分为音频，视频，数据）行
         void add_content(std::shared_ptr<MediaContentDescription> content);
         inline const std::vector<std::shared_ptr<MediaContentDescription>>& contents() const {return _contents;}

@@ -23,6 +23,9 @@ namespace grtc
             conf->log_name = config["log"]["log_name"].as<std::string>();
             conf->log_level = config["log"]["log_level"].as<std::string>();
             conf->log_to_stderr = config["log"]["log_to_stderr"].as<bool>();
+            conf->ice_min_port = config["ice"]["min_port"].as<int>();
+            conf->ice_max_port = config["ice"]["max_port"].as<int>();
+            conf->server_addr = config["server_addr"].as<std::string>();
         }
         catch(YAML::Exception &e)
         {

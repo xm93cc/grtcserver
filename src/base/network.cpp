@@ -1,8 +1,6 @@
 #include <ifaddrs.h>
-
 #include <rtc_base/logging.h>
 #include "base/network.h"
-
 namespace grtc {
 
 NetworkManager::NetworkManager() = default;
@@ -31,8 +29,7 @@ int NetworkManager::create_networks() {
 
         struct sockaddr_in* addr = (struct sockaddr_in*)(cur->ifa_addr);
         rtc::IPAddress ip_address(addr->sin_addr);
-        
-        if (rtc::IPIsPrivateNetwork(ip_address) || rtc::IPIsLoopback(ip_address)) {
+        if (/**rtc::IPIsPrivateNetwork(ip_address) ||**/  rtc::IPIsLoopback(ip_address)) {
             continue;
         }
         

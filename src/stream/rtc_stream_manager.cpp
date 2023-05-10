@@ -2,12 +2,15 @@
 #include <rtc_base/rtc_certificate.h>
 #include"stream/rtc_stream_manager.h"
 #include"stream/push_stream.h"
-
+#include "base/conf.h"
+extern grtc::GeneralConf* g_conf;
 namespace grtc
 {
     RtcStreamManager::RtcStreamManager(EventLoop* el)
     :el(el),_allocator(new PortAllocator())
-    {}
+    {
+        _allocator->set_port_range(g_conf->ice_min_port, g_conf->ice_max_port);
+    }
     //free 
     RtcStreamManager::~RtcStreamManager(){}
 
