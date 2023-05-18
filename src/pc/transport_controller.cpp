@@ -49,4 +49,21 @@ int TransportController::set_local_description(SessionDescription* desc)
     _ice_agent->gathering_candidate();
     return 0;
 }
+
+int TransportController::set_remote_description(SessionDescription *sd) {
+    if(!sd)
+        return -1;
+
+    for (auto content : sd->contents()){
+        std::string mid = content->mid();
+        if(sd->is_bundle(mid) && mid != sd->get_first_bundle_mid()){
+            continue;
+        }
+        auto td = sd->get_transport_info(mid);
+
+        _ice_agent->set_remote_ice_params(content->mid(), IceCandidateComponent::RTP, IceParameters(td->ice_ufrag, td->ice_pwd));
+    }
+    return 0;
+    
+}
 } // namespace grtc

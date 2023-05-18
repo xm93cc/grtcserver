@@ -14,6 +14,7 @@ namespace grtc
         int cmdno = -1;
         uint64_t uid = 0;
         std::string stream_name;
+        std::string stream_type;
         int audio = 0;
         int video = 0;
         uint32_t log_id = 0;

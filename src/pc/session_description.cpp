@@ -2,6 +2,8 @@
 #include "pc/session_description.h"
 #include <sstream>
 #include <rtc_base/logging.h>
+#include "base/conf.h"
+extern grtc::GeneralConf* g_conf;
 namespace grtc
 {
 
@@ -234,17 +236,29 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
         
     }
 
+    
+    bool SessionDescription::add_transport_info(std::shared_ptr<TransportDescription> td){
+        _transport_infos.push_back(td);
+        return true;
+    }
+
     static void build_candidates(std::shared_ptr<MediaContentDescription> content, std::stringstream& ss)
     {
         for(auto c: content->candidates()){
             ss << "a=candidate:" << c.foundation
             << " " << c.component 
             << " " << c.protocol
-            << " " << c.priority 
-            << " " << c.address.HostAsURIString()
-            << " " << c.port
+            << " " << c.priority;
+            if (rtc::IPIsPrivateNetwork(c.address.ipaddr()))
+            {
+                ss<< " " << g_conf->server_addr;
+            }else{
+                ss<< " " << c.address.HostAsURIString();
+            }
+            ss<< " " << c.port
             << " typ " << c.type
             << "\r\n";
+            RTC_LOG(LS_INFO) << "++++++++++++" << c.address.HostAsURIString();
         }
     }
 

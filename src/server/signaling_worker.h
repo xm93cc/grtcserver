@@ -33,10 +33,12 @@ class SignalingWorker{
         int _process_push(int cmdno,TcpConnection* c,const Json::Value& root,uint32_t log_id);
         //响应服务端offer
         void  _response_server_offer(std::shared_ptr<RtcMsg> msg);
-        //
+        //在连接中添加报文
         void _add_reply(TcpConnection* c, const rtc::Slice& reply);
-        //
+        //写回报文
         void _write_reply(int fd);
+        //处理answer
+        int _process_answer(int cmdno, TcpConnection *c, const Json::Value &root, uint32_t log_id);
     
     public:
         enum{

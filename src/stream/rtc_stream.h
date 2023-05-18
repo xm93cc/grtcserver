@@ -20,6 +20,7 @@ namespace grtc
                                 , bool audio, bool video, uint32_t log_id);
         virtual ~RtcStream();
         int start(rtc::RTCCertificate* certificate);
+        int set_remote_sdp(const std::string& sdp);
         virtual std::string create_offer() = 0;
     protected:
         EventLoop* el;
@@ -30,6 +31,7 @@ namespace grtc
         uint32_t log_id;
         std::unique_ptr<PeerConnection> pc;
         PortAllocator* _allocator;
+        friend class RtcStreamManager;
     };
 } // namespace grtc
 

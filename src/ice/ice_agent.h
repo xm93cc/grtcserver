@@ -24,6 +24,8 @@ public:
     sigslot::signal4<IceAgent*, const std::string&, IceCandidateComponent, const std::vector<Candidate>&> signal_candidate_allocate_done;
     void set_ice_params(const std::string &transport_name, IceCandidateComponent componet,
                         const IceParameters &ice_parmas);
+    void set_remote_ice_params(const std::string &transport_name, IceCandidateComponent componet,
+                        const IceParameters &ice_parmas);
 
 private:
     std::vector<IceTransportChannel*>::iterator _get_channel(

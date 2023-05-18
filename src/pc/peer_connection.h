@@ -24,6 +24,7 @@ namespace grtc
     private:
         EventLoop *_el;
         std::unique_ptr<SessionDescription> _local_desc;
+        std::unique_ptr<SessionDescription> _remote_desc;
         rtc::RTCCertificate* _certificate = nullptr;
         std::unique_ptr<TransportController> _transport_controller;
         void on_candidate_allocate_done(TransportController* peer_connection, const std::string& transport_name,
@@ -37,6 +38,8 @@ namespace grtc
         std::string create_offer(const RTCOfferAnswerOptions &options);
         //证书
         int init(rtc::RTCCertificate* certificate);
+        //设置sdp
+        int set_remote_sdp(const std::string& sdp);
     };
 
 } // namespace grtc

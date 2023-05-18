@@ -28,7 +28,8 @@ namespace grtc
         void _process_rtc_msg();
         //处理push消息
         void _process_push(std::shared_ptr<RtcMsg> msg);
-
+        //处理answer消息
+        void _process_answer(std::shared_ptr<RtcMsg> msg);
     public:
         enum{
             QUIT = 0,
