@@ -26,6 +26,10 @@ std::string compute_foundation(const std::string& type, const std::string& proto
     return std::to_string(rtc::ComputeCrc32(ss.str()));
 }   
 
+void UDPPort::_on_read_packet(AsyncUdpSocket* socket, char* buf, size_t size, const rtc::SocketAddress& addr, int64_t ts){
+    RTC_LOG(LS_WARNING) << "==========remote addr: " << addr.ToString() << "  ts: " << ts << " size: " << size;
+}
+
 int UDPPort::create_ice_candidate(Network* network, int min_port, int max_port, Candidate& c)
 {
     _socket = create_udp_socket(network->ip().family());
@@ -49,6 +53,8 @@ int UDPPort::create_ice_candidate(Network* network, int min_port, int max_port, 
     }
     _local_addr.SetIP(network->ip());
     _local_addr.SetPort(port);
+    _async_socket = std::make_unique<AsyncUdpSocket>(_el, _socket);
+    _async_socket->signal_read_packet.connect(this, &UDPPort::_on_read_packet);
     RTC_LOG(LS_INFO) << "prepared socket address: " << _local_addr.ToString();
     
     c.component = _component;

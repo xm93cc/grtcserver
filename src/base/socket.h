@@ -36,6 +36,20 @@ namespace grtc{
      * @Description: 通过socket获取地址信息
      */
     int sock_get_address(int sock, char* ip, int* port);
+
+    /*
+     * @Author: XM93CC
+     * @Date: 2023-05-31 11:21:06
+     * @Description: 从sock中读取数据
+     */
+    int sock_recv_from(int sock, char* buf, size_t size, struct sockaddr* addr, socklen_t addr_len);
+
+    /*
+     * @Author: XM93CC
+     * @Date: 2023-06-13 15:28:10
+     * @Description: 读取socket接收数据包时间
+     */
+    int64_t sock_get_recv_timestamp(int sock);
 }//namespace grtc
 
 #endif //__BASE_SOCKET_H_

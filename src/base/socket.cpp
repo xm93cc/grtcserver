@@ -1,5 +1,6 @@
 //impl socket.h
 
+#include<sys/ioctl.h>
 #include "base/socket.h"
 #include<unistd.h>
 #include<rtc_base/logging.h>
@@ -216,4 +217,31 @@ namespace grtc{
         return 0;
     }
 
+    int sock_recv_from(int sock, char *buf, size_t len, struct sockaddr *addr,
+                       socklen_t addr_len) {
+        int received = recvfrom(sock, buf, len, 0, addr, &addr_len);
+        if (received < 0) {
+            if (EAGAIN == errno) {
+                received = 0;
+            } else {
+                RTC_LOG(LS_WARNING) << "recv from error: " << strerror(errno)
+                                    << ", erron: " << errno;
+                return -1;
+            }
+        } else if (0 == received) {
+            RTC_LOG(LS_WARNING) << "recv from error: " << strerror(errno)
+                                << ", erron: " << errno;
+            return -1;
+        }
+        return received;
+    }
+
+    int64_t sock_get_recv_timestamp(int sock){
+        struct timeval time;
+        int ret = ioctl(sock, SIOCGSTAMP_OLD, &time);
+        if(ret != 0){
+            return -1;
+        }
+        return time.tv_sec * 1000000 + time.tv_usec;
+    }
 } // namespace grtc
