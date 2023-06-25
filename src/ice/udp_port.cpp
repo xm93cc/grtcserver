@@ -6,6 +6,7 @@
 #include "ice/udp_port.h"
 #include <rtc_base/crc32.h>
 #include <rtc_base/logging.h>
+#include <ice/stun.h>
 namespace grtc
 {
 UDPPort::UDPPort(EventLoop *el, const std::string& transport_name,
@@ -26,8 +27,24 @@ std::string compute_foundation(const std::string& type, const std::string& proto
     return std::to_string(rtc::ComputeCrc32(ss.str()));
 }   
 
+bool UDPPort::get_stun_message(const char* data, size_t len, std::unique_ptr<StunMessage>* out_msg)
+{
+    if(!StunMessage::validate_fingerprint(data, len)){
+        return false;
+    }
+    std::unique_ptr<StunMessage> stun_msg = std::make_unique<StunMessage>();
+    rtc::ByteBufferReader buf(data, len);
+    if(!stun_msg->read(&buf)){
+        return false;
+    }
+    
+    return true;
+}
+
 void UDPPort::_on_read_packet(AsyncUdpSocket* socket, char* buf, size_t size, const rtc::SocketAddress& addr, int64_t ts){
-    RTC_LOG(LS_WARNING) << "==========remote addr: " << addr.ToString() << "  ts: " << ts << " size: " << size;
+    std::unique_ptr<StunMessage> stun_msg;
+    bool ret = get_stun_message(buf, size, &stun_msg);
+    RTC_LOG(LS_WARNING) << "========ret: " << ret;
 }
 
 int UDPPort::create_ice_candidate(Network* network, int min_port, int max_port, Candidate& c)
