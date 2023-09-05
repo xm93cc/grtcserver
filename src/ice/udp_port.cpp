@@ -5,6 +5,7 @@
 #include "base/socket.h"
 #include "ice/udp_port.h"
 #include <rtc_base/crc32.h>
+#include <rtc_base/string_encode.h>
 #include <rtc_base/logging.h>
 #include <ice/stun.h>
 namespace grtc
@@ -37,8 +38,47 @@ bool UDPPort::get_stun_message(const char* data, size_t len, std::unique_ptr<Stu
     if(!stun_msg->read(&buf)){
         return false;
     }
+    if(STUN_BINDING_REQUEST == stun_msg->type()){
+        if(!stun_msg->get_byte_string(STUN_ATTR_USERNAME)||!stun_msg->get_byte_string(STUN_ATTR_MESSAGE_INTEGRITY)){
+            //todo send error request
+            return true;
+        }
+        std::string local_ufrag;
+        std::string remote_ufrag;
+        if(!_parse_stun_username(stun_msg.get(), &local_ufrag, &remote_ufrag)){
+            //todo
+            return true;
+        }
+        if(stun_msg->validate_message_integrity(_ice_params.ice_pwd) != StunMessage::IntegrityStatus::k_integrity_ok){
+            //todo
+            return true;
+        }
+    }
     
     return true;
+}
+
+bool UDPPort::_parse_stun_username(StunMessage* stun_msg, std::string* local_ufrag, std::string* remote_ufrag){
+    local_ufrag->clear();
+    remote_ufrag->clear();
+
+   const StunByteStringAttribute* attr = stun_msg->get_byte_string(STUN_ATTR_USERNAME);
+   if(!attr){
+    return false;
+   }
+   // RFRAG:LFRAG
+   std::string username = attr->get_string();
+   std::vector<std::string> fileds;
+   rtc::split(username, ':', &fileds);
+   if (fileds.size() != 2) {
+    return false;
+   }
+    *local_ufrag = fileds[0];
+    *remote_ufrag = fileds[1];
+
+    RTC_LOG(LS_WARNING) << "local_ufrag: " << *local_ufrag << "  remote_ufrag: " << *remote_ufrag;
+    return true;
+
 }
 
 void UDPPort::_on_read_packet(AsyncUdpSocket* socket, char* buf, size_t size, const rtc::SocketAddress& addr, int64_t ts){
