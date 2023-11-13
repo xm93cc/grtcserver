@@ -46,6 +46,8 @@ void IceTransportChannel::gathering_candidate()
      }
      for(auto network : network_list){     
           UDPPort* port = new UDPPort(_el, _transport_name, _component, _ice_params);
+          //处理连接检查传递的地址
+          port->signal_unknown_address.connect(this,&IceTransportChannel::_on_unknown_address);
           Candidate c;
           int ret = port->create_ice_candidate(network, _allocator->get_min_port(), _allocator->get_max_port(), c);
           if (ret != 0)
@@ -66,6 +68,33 @@ void IceTransportChannel::set_remote_ice_params(const IceParameters& ice_params)
                          << ", component: " << _component << ", ufrag: "
                          << ice_params.ice_ufrag << ", pwd: " << ice_params.ice_pwd;
      _remote_ice_params = ice_params;
+}
+
+
+std::string IceTransportChannel::to_string(){
+     std::stringstream ss;
+     ss << "Channel[" << this << ":" << _transport_name << ":" << _component << "]";
+     return ss.str();
+}
+
+void  IceTransportChannel::_on_unknown_address(UDPPort* port, const rtc::SocketAddress& addr,StunMessage* msg,const std::string& remote_ufrag){
+     const StunUint32Attribute* priority_attr = msg->get_uint32(STUN_ATTR_PRIORITY);
+     if(!priority_attr){
+          RTC_LOG(LS_WARNING) << to_string() << ": priority not found in the"
+          << " binding request message, remote_addr: " << addr.ToString();
+          return; 
+     }
+     uint32_t remote_priority = priority_attr->value();
+     Candidate remote_candidate;
+     remote_candidate.component = _component;
+     remote_candidate.protocol = "udp";
+     remote_candidate.address = addr;
+     remote_candidate.username = remote_ufrag;
+     remote_candidate.password = _remote_ice_params.ice_pwd;
+     remote_candidate.priority = remote_priority;
+     remote_candidate.type = PRFLX_PORT_TYPE;
+     RTC_LOG(LS_INFO) << to_string() <<  " create peer reflexive candidate: " 
+     << remote_candidate.to_string();
 }
 
 } // namespace grtc

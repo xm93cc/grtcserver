@@ -26,6 +26,8 @@ public:
     std::string to_string();
     //发送异常的stun消息
     void send_binding_error_response(StunMessage * stun_msg, const rtc::SocketAddress & addr, int err_code, const std::string & reason);
+    //定义信号
+    sigslot::signal4<UDPPort*, const rtc::SocketAddress&,StunMessage*,const std::string&> signal_unknown_address;
 private:
     void _on_read_packet(AsyncUdpSocket* socket, char* buf, size_t size, const rtc::SocketAddress& addr, int64_t ts);
     bool get_stun_message(const char * data, size_t len, const rtc::SocketAddress & addr, std::unique_ptr<StunMessage>* out_msg, std::string * out_username);

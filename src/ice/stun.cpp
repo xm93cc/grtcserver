@@ -62,6 +62,8 @@ namespace grtc
             return STUN_VALUE_BYTE_STRING;
         case STUN_ATTR_MESSAGE_INTEGRITY:
             return STUN_VALUE_BYTE_STRING;
+        case STUN_ATTR_PRIORITY:
+            return STUN_VALUE_UINT32;
         default:
             return STUN_VALUE_UNKNOWN;
         }
@@ -73,6 +75,8 @@ namespace grtc
         {
         case STUN_VALUE_BYTE_STRING:
             return new StunByteStringAttribute(type, length);
+        case STUN_VALUE_UINT32:
+            return new StunUint32Attribute(type);
         default:
             return nullptr;
         }
@@ -86,7 +90,28 @@ namespace grtc
         }
         return nullptr;
     }
+    // uint32
+    
+    const StunUint32Attribute* StunMessage::get_uint32(uint16_t type){
+        return static_cast<const StunUint32Attribute *>(_get_attribute(type));
+    }
 
+    StunUint32Attribute::StunUint32Attribute(uint16_t type)
+    :StunAttribute(type, SIZE), _bits(0){}
+
+    StunUint32Attribute::StunUint32Attribute(uint16_t type, uint32_t value)
+    :StunAttribute(type, SIZE), _bits(value){}
+   
+    bool StunUint32Attribute::read(rtc::ByteBufferReader* buf){
+        if(length() != SIZE || !buf->ReadUInt32(&_bits)){
+            return false;
+        }
+        return true;
+    }
+
+
+
+    // byteString
     const StunByteStringAttribute *StunMessage::get_byte_string(uint16_t type)
     {
         return static_cast<const StunByteStringAttribute *>(_get_attribute(type));

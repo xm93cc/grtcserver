@@ -96,7 +96,7 @@ bool UDPPort::_parse_stun_username(StunMessage* stun_msg, std::string* local_ufr
     *local_ufrag = fileds[0];
     *remote_ufrag = fileds[1];
 
-    RTC_LOG(LS_WARNING) << "local_ufrag: " << *local_ufrag << "  remote_ufrag: " << *remote_ufrag;
+    //RTC_LOG(LS_WARNING) << "local_ufrag: " << *local_ufrag << "  remote_ufrag: " << *remote_ufrag;
     return true;
 
 }
@@ -105,7 +105,19 @@ void UDPPort::_on_read_packet(AsyncUdpSocket* socket, char* buf, size_t size, co
     std::unique_ptr<StunMessage> stun_msg;
     std::string remote_ufrag;
     bool ret = get_stun_message(buf, size, addr, &stun_msg, &remote_ufrag);
-    RTC_LOG(LS_WARNING) << "========ret: " << ret;
+    //RTC_LOG(LS_WARNING) << "========ret: " << ret;
+
+    if(!ret || !stun_msg){
+        return;
+    }
+
+    if(STUN_BINDING_REQUEST == stun_msg->type()){
+        RTC_LOG(LS_INFO) << to_string() << ": Received "
+                         << stun_method_to_string(stun_msg->type()) 
+                         << " id="  << rtc::hex_encode(stun_msg->transaction_id())
+                         << " from " << addr.ToString();
+        signal_unknown_address(this, addr, stun_msg.get(),remote_ufrag);
+    }
 }
 
 int UDPPort::create_ice_candidate(Network* network, int min_port, int max_port, Candidate& c)

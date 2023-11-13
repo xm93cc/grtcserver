@@ -3,6 +3,7 @@
 namespace grtc
 {
     #define LOCAL_PORT_TYPE "host"
+    #define PRFLX_PORT_TYPE "prflx"
     extern const int ICE_UFRAG_LENGTH;
     extern const int ICE_PWD_LENGTH;
 
