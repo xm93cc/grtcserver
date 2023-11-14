@@ -5,6 +5,7 @@
 #ifndef _UDP_PORT_H_
 #define _UDP_PORT_H_
 #include <string>
+#include <map>
 #include <rtc_base/socket_address.h>
 #include "base/event_loop.h"
 #include "base/network.h"
@@ -16,16 +17,23 @@
 #include "ice/stun.h"
 namespace grtc
 {
+
+class IceConnection;
+typedef std::map<rtc::SocketAddress, IceConnection*> AddressMap;
 class UDPPort : public sigslot::has_slots<>{
 public:
     UDPPort(EventLoop* el,const std::string& transport_name,
     IceCandidateComponent component,IceParameters ice_params);
     int create_ice_candidate(Network* network, int min_port, int max_port, Candidate& c);
     ~UDPPort();
-    bool get_stun_message(const char* data, size_t len, std::unique_ptr<StunMessage>* out_msg);
+    //bool get_stun_message(const char* data, size_t len, std::unique_ptr<StunMessage>* out_msg);
+    // bool get_stun_message(const char* data, size_t len,
+    //                         const rtc::SocketAddress& addr, std::unique_ptr<StunMessage>* out_msg,
+    //                        std::string* out_username);
     std::string to_string();
     //发送异常的stun消息
     void send_binding_error_response(StunMessage * stun_msg, const rtc::SocketAddress & addr, int err_code, const std::string & reason);
+    IceConnection* create_connection(EventLoop* el, const Candidate& candidate);
     //定义信号
     sigslot::signal4<UDPPort*, const rtc::SocketAddress&,StunMessage*,const std::string&> signal_unknown_address;
 private:
@@ -41,6 +49,7 @@ private:
     std::unique_ptr<AsyncUdpSocket> _async_socket;
     rtc::SocketAddress _local_addr;
     std::vector<Candidate> _candidates;
+    AddressMap _connections;
 };
 } // namespace grtc
 

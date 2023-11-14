@@ -38,10 +38,12 @@ enum StunAttributeValueType{
 enum StunErrorCode{
   STUN_ERROR_BAD_REQUEST = 400,
   STUN_ERROR_UNATHORIZED = 401,
+  STUN_ERROR_SERVER_ERROR = 500,
 };
 
 extern const char STUN_ERROR_REASON_BAD_REQUEST[];
 extern const char STUN_ERROR_REASON_UNATHORIZED[];
+extern const char STUN_ERROR_REASON_SERVER_ERROR[];
 std::string stun_method_to_string(int type);
 
 class StunAttribute;

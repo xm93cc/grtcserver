@@ -8,7 +8,8 @@
 #include <rtc_base/string_encode.h>
 #include <rtc_base/logging.h>
 #include <ice/stun.h>
-#include "udp_port.h"
+#include "ice/ice_connection.h"
+#include "ice/udp_port.h"
 namespace grtc
 {
 UDPPort::UDPPort(EventLoop *el, const std::string& transport_name,
@@ -99,6 +100,17 @@ bool UDPPort::_parse_stun_username(StunMessage* stun_msg, std::string* local_ufr
     //RTC_LOG(LS_WARNING) << "local_ufrag: " << *local_ufrag << "  remote_ufrag: " << *remote_ufrag;
     return true;
 
+}
+
+IceConnection* UDPPort::create_connection(EventLoop* el, const Candidate& remote_candidate){
+    IceConnection* conn = new IceConnection(_el, this, remote_candidate);
+    auto ret = _connections.insert(std::make_pair(conn->remote_candidate().address,conn));
+    if(ret.second == false && ret.first->second != conn){
+        RTC_LOG(LS_WARNING) << to_string() << ": create ice connection on "
+        << "an existing remote address, addr: " << conn->remote_candidate().address.ToString();
+        ret.first->second = conn;
+    }
+    return conn;
 }
 
 void UDPPort::_on_read_packet(AsyncUdpSocket* socket, char* buf, size_t size, const rtc::SocketAddress& addr, int64_t ts){

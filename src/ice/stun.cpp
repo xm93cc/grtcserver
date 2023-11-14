@@ -9,7 +9,7 @@ namespace grtc
     const size_t STUN_FINGERPRINT_XOR_VALUE = 0x5354554e;
     const char STUN_ERROR_REASON_BAD_REQUEST[] = "Bad request";
     const char STUN_ERROR_REASON_UNATHORIZED[] = "Unathorized";
-
+    const char STUN_ERROR_REASON_SERVER_ERROR[] = "Server error";
     std::string stun_method_to_string(int type){
         switch (type)
         {
