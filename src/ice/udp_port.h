@@ -26,6 +26,8 @@ public:
     IceCandidateComponent component,IceParameters ice_params);
     int create_ice_candidate(Network* network, int min_port, int max_port, Candidate& c);
     ~UDPPort();
+    std::string ice_ufrag(){return _ice_params.ice_ufrag;}
+    std::string ice_pwd(){return _ice_params.ice_pwd;}
     //bool get_stun_message(const char* data, size_t len, std::unique_ptr<StunMessage>* out_msg);
     // bool get_stun_message(const char* data, size_t len,
     //                         const rtc::SocketAddress& addr, std::unique_ptr<StunMessage>* out_msg,
@@ -33,7 +35,9 @@ public:
     std::string to_string();
     //发送异常的stun消息
     void send_binding_error_response(StunMessage * stun_msg, const rtc::SocketAddress & addr, int err_code, const std::string & reason);
-    IceConnection* create_connection(EventLoop* el, const Candidate& candidate);
+    IceConnection* create_connection(const Candidate& candidate);
+
+    IceConnection* get_connection(const rtc::SocketAddress& addr);
     //定义信号
     sigslot::signal4<UDPPort*, const rtc::SocketAddress&,StunMessage*,const std::string&> signal_unknown_address;
 private:

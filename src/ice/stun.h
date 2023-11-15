@@ -6,6 +6,7 @@
  * @Description: stun message 定义
  */
 #include <rtc_base/byte_buffer.h>
+#include <rtc_base/socket_address.h>
 #include <string>
 #include <memory>
 #include <vector>
@@ -19,13 +20,15 @@ const size_t k_stun_transaction_id_length = 12;
 const size_t k_stun_message_integrity_size = 20;
 
 enum StunMessageType{
-  STUN_BINDING_REQUEST = 0x0001
+  STUN_BINDING_REQUEST = 0x0001,
+  STUN_BINDING_RESPONSE = 0x1001
 };
 
 enum StunAttributeType{
-  STUN_ATTR_USERNAME = 0x0006,
-  STUN_ATTR_PRIORITY = 0x0024,
+  STUN_ATTR_USERNAME = 0x0006, 
   STUN_ATTR_MESSAGE_INTEGRITY = 0x0008,
+  STUN_ATTR_XOR_MAPPED_ADDRESS = 0x020,
+  STUN_ATTR_PRIORITY = 0x0024,
   STUN_ATTR_FINGERPRINT = 0x8028,
 };
 
@@ -65,6 +68,8 @@ class StunMessage {
       k_integrity_bad
     };
     static bool validate_fingerprint(const char *data, size_t len);
+    void add_fingerprint();
+
     StunMessage(/* args */);
     ~StunMessage();
     //读取StunMessage
@@ -72,10 +77,20 @@ class StunMessage {
     StunAttributeValueType get_attrribute_value_type(int type);
     const StunByteStringAttribute* get_byte_string(uint16_t type);
     const StunUint32Attribute* get_uint32(uint16_t type);
+
     const std::string& transaction_id()const{return _transaction_id;}
+    void set_transaction_id(const std::string& transaction_id){ _transaction_id = transaction_id;}
+
     uint16_t type()const{return _type;}
+    void set_type(uint16_t type){_type = type;}
+
     size_t length()const{return _length;}
+    void set_length(size_t len){_length = len;}
+
     StunMessage::IntegrityStatus validate_message_integrity(const std::string& password);
+    bool add_message_integrity(const std::string& password);
+
+    void add_attribute(std::unique_ptr<StunAttribute> attr);
 
 
   private:
@@ -105,6 +120,23 @@ class StunAttribute {
     StunAttribute(uint16_t type, uint16_t length);
     void consume_padding(rtc::ByteBufferReader* buf);
 };
+
+class StunAddressAttribute : public StunAttribute{
+public:
+  StunAddressAttribute(uint16_t type, const rtc::SocketAddress& addr);
+  ~StunAddressAttribute(){}
+
+  bool read(rtc::ByteBufferReader* buf) override;
+private:
+  rtc::SocketAddress _address;
+};
+
+class StunXorAddressAttribute : public StunAddressAttribute{
+public:
+  StunXorAddressAttribute(uint16_t type, const rtc::SocketAddress& addr);
+  ~StunXorAddressAttribute(){}
+};
+
 
 
 class StunUint32Attribute : public StunAttribute{

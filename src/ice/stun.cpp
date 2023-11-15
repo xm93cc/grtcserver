@@ -81,6 +81,7 @@ namespace grtc
             return nullptr;
         }
     }
+
     StunAttribute *StunMessage::_create_attribute(uint16_t type, uint16_t length)
     {
         StunAttributeValueType value_type = get_attrribute_value_type(type);
@@ -90,6 +91,26 @@ namespace grtc
         }
         return nullptr;
     }
+
+    //address
+    StunAddressAttribute::StunAddressAttribute(uint16_t type, const rtc::SocketAddress& addr)
+        :StunAttribute(type, 0),_address(addr)
+    {
+        //set_address();
+    }
+
+    bool StunAddressAttribute::read(rtc::ByteBufferReader* buf){
+        return true;
+    }
+
+    //Xor Address
+    
+     StunXorAddressAttribute::StunXorAddressAttribute(uint16_t type, const rtc::SocketAddress& addr)
+        :StunAddressAttribute(type, addr)
+    {
+        //set_address();
+    }
+
     // uint32
     
     const StunUint32Attribute* StunMessage::get_uint32(uint16_t type){
@@ -167,6 +188,23 @@ namespace grtc
 
         consume_padding(buf);
         return true;
+    }
+
+    bool StunMessage::add_message_integrity(const std::string& password){
+        return true;
+    }
+
+    void StunMessage::add_fingerprint(){
+        
+    }
+    
+    void StunMessage::add_attribute(std::unique_ptr<StunAttribute> attr){
+        size_t attr_len = attr->length();
+        if (attr_len % 4 != 0){
+            attr_len += (attr_len + (attr_len % 4));
+        }
+        _length += attr_len;
+        _attrs.push_back(std::move(attr));
     }
 
     bool StunMessage::read(rtc::ByteBufferReader *buf)

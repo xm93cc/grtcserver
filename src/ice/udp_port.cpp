@@ -102,18 +102,29 @@ bool UDPPort::_parse_stun_username(StunMessage* stun_msg, std::string* local_ufr
 
 }
 
-IceConnection* UDPPort::create_connection(EventLoop* el, const Candidate& remote_candidate){
+IceConnection* UDPPort::create_connection(const Candidate& remote_candidate){
     IceConnection* conn = new IceConnection(_el, this, remote_candidate);
     auto ret = _connections.insert(std::make_pair(conn->remote_candidate().address,conn));
     if(ret.second == false && ret.first->second != conn){
         RTC_LOG(LS_WARNING) << to_string() << ": create ice connection on "
         << "an existing remote address, addr: " << conn->remote_candidate().address.ToString();
         ret.first->second = conn;
+        //todo 处理重复创建连接的情况
     }
     return conn;
 }
 
+IceConnection* UDPPort::get_connection(const rtc::SocketAddress& addr){
+    auto iter = _connections.find(addr);
+    return iter == _connections.end() ? nullptr : iter->second;
+}
+
 void UDPPort::_on_read_packet(AsyncUdpSocket* socket, char* buf, size_t size, const rtc::SocketAddress& addr, int64_t ts){
+    //处理重复创建IceConnection问题（连通性检查会每隔48ms发一次请求）
+    if(IceConnection* conn = get_connection(addr)){
+        conn->on_read_packet(buf, size, ts);
+        return;
+    }
     std::unique_ptr<StunMessage> stun_msg;
     std::string remote_ufrag;
     bool ret = get_stun_message(buf, size, addr, &stun_msg, &remote_ufrag);

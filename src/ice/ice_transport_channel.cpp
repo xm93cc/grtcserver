@@ -5,6 +5,7 @@
 #include <rtc_base/logging.h>
 #include "ice/ice_transport_channel.h"
 #include "ice/udp_port.h"
+#include "ice/ice_connection.h"
 
 namespace grtc
 {
@@ -97,7 +98,7 @@ void  IceTransportChannel::_on_unknown_address(UDPPort* port, const rtc::SocketA
      remote_candidate.type = PRFLX_PORT_TYPE;
      RTC_LOG(LS_INFO) << to_string() <<  " create peer reflexive candidate: " 
      << remote_candidate.to_string();
-     IceConnection* conn = port->create_connection(_el, remote_candidate);
+     IceConnection* conn = port->create_connection(remote_candidate);
      if(!conn){
           RTC_LOG(LS_WARNING) <<to_string() << "create connection from peer reflexive candidate error remote_addr: "
           << addr.ToString();
@@ -106,6 +107,7 @@ void  IceTransportChannel::_on_unknown_address(UDPPort* port, const rtc::SocketA
      }
      RTC_LOG(LS_INFO) <<to_string() << "create connection from peer reflexive candidate success remote_addr: "
      << addr.ToString();
+     conn->handle_stun_binding_request(msg);
 }
 
 } // namespace grtc
