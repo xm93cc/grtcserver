@@ -44,6 +44,12 @@ enum StunErrorCode{
   STUN_ERROR_SERVER_ERROR = 500,
 };
 
+enum StunAddressFamily{
+  STUN_ADDRESS_UNDEF = 0,
+  STUN_ADDRESS_IPV4 = 1,
+  STUN_ADDRESS_IPV6 = 2,
+};
+
 extern const char STUN_ERROR_REASON_BAD_REQUEST[];
 extern const char STUN_ERROR_REASON_UNATHORIZED[];
 extern const char STUN_ERROR_REASON_SERVER_ERROR[];
@@ -59,7 +65,7 @@ class StunMessage {
     const StunAttribute* _get_attribute(uint16_t type);
     bool _validate_message_integrity_of_type(uint16_t mi_attr_type, size_t mi_attr_size, const char* data, 
                                             size_t size, const std::string& password);
-
+    bool _add_message_integrity_of_type(uint16_t attr_type, uint16_t attr_size, const char* key, size_t len);
   public:
     enum class IntegrityStatus{
       k_not_set,
@@ -74,6 +80,8 @@ class StunMessage {
     ~StunMessage();
     //读取StunMessage
     bool read(rtc::ByteBufferReader* buf);
+    bool write(rtc::ByteBufferWriter* buf);
+
     StunAttributeValueType get_attrribute_value_type(int type);
     const StunByteStringAttribute* get_byte_string(uint16_t type);
     const StunUint32Attribute* get_uint32(uint16_t type);
@@ -89,10 +97,11 @@ class StunMessage {
 
     StunMessage::IntegrityStatus validate_message_integrity(const std::string& password);
     bool add_message_integrity(const std::string& password);
+    
 
     void add_attribute(std::unique_ptr<StunAttribute> attr);
-
-
+  
+  
   private:
     uint16_t _type;
     uint16_t _length;
@@ -111,9 +120,15 @@ class StunAttribute {
   
   public:
     virtual bool read(rtc::ByteBufferReader* buf) = 0;
+    virtual bool write(rtc::ByteBufferWriter* buf) = 0;
+
     virtual ~StunAttribute();
+    
     int type() const{return _type;}
+    void set_type(uint16_t type){_type = type;}
+
     size_t length() const {return _length;}
+    void set_length(uint16_t len){_length = len;}
 
     static StunAttribute* create(StunAttributeValueType value_type, uint16_t type, uint16_t length, void* owner);
   protected:
@@ -123,10 +138,20 @@ class StunAttribute {
 
 class StunAddressAttribute : public StunAttribute{
 public:
+  static const size_t SIZE_UNDEF = 0;
+  static const size_t SIZE_IPV4 = 8;
+  static const size_t SIZE_IPV6 = 20;
+
   StunAddressAttribute(uint16_t type, const rtc::SocketAddress& addr);
   ~StunAddressAttribute(){}
+  
+  void set_address(const rtc::SocketAddress& addr);
+
+  StunAddressFamily family();
 
   bool read(rtc::ByteBufferReader* buf) override;
+  bool write(rtc::ByteBufferWriter* buf) override;
+
 private:
   rtc::SocketAddress _address;
 };
@@ -135,6 +160,7 @@ class StunXorAddressAttribute : public StunAddressAttribute{
 public:
   StunXorAddressAttribute(uint16_t type, const rtc::SocketAddress& addr);
   ~StunXorAddressAttribute(){}
+  bool write(rtc::ByteBufferWriter* buf) override;
 };
 
 
@@ -147,15 +173,22 @@ public:
     StunUint32Attribute(uint16_t type, uint32_t value);
     ~StunUint32Attribute()override{}
     uint32_t value()const{return _bits;}
+
     bool read(rtc::ByteBufferReader* buf)override;
+    bool write(rtc::ByteBufferWriter* buf) override;
 
 };
 class StunByteStringAttribute : public StunAttribute {
   public:
     StunByteStringAttribute(uint16_t type, uint16_t length);
+    StunByteStringAttribute(uint16_t type, const std::string& str);
     ~StunByteStringAttribute() override;
     bool read(rtc::ByteBufferReader* buf) override;
     std::string get_string() const {return std::string(_bytes,length());}
+    void copy_bytes(const char* bytes, size_t len);
+    bool write(rtc::ByteBufferWriter* buf)override;
+  private:
+     void _set_bytes(char* bytes);
   private:
     char *_bytes = nullptr;
 };
