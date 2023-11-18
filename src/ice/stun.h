@@ -74,7 +74,7 @@ class StunMessage {
       k_integrity_bad
     };
     static bool validate_fingerprint(const char *data, size_t len);
-    void add_fingerprint();
+    bool add_fingerprint();
 
     StunMessage(/* args */);
     ~StunMessage();
@@ -134,6 +134,7 @@ class StunAttribute {
   protected:
     StunAttribute(uint16_t type, uint16_t length);
     void consume_padding(rtc::ByteBufferReader* buf);
+    void write_padding(rtc::ByteBufferWriter* buf);
 };
 
 class StunAddressAttribute : public StunAttribute{
@@ -152,7 +153,7 @@ public:
   bool read(rtc::ByteBufferReader* buf) override;
   bool write(rtc::ByteBufferWriter* buf) override;
 
-private:
+protected:
   rtc::SocketAddress _address;
 };
 
@@ -161,6 +162,10 @@ public:
   StunXorAddressAttribute(uint16_t type, const rtc::SocketAddress& addr);
   ~StunXorAddressAttribute(){}
   bool write(rtc::ByteBufferWriter* buf) override;
+private:
+  
+  rtc::IPAddress _get_xored_ip();
+
 };
 
 
@@ -173,6 +178,7 @@ public:
     StunUint32Attribute(uint16_t type, uint32_t value);
     ~StunUint32Attribute()override{}
     uint32_t value()const{return _bits;}
+    uint32_t set_value(uint32_t value){ _bits =value;}
 
     bool read(rtc::ByteBufferReader* buf)override;
     bool write(rtc::ByteBufferWriter* buf) override;

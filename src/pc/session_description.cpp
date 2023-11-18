@@ -19,10 +19,10 @@ const char k_meida_protocol_savpf[] = "RTP/SAVPF";
         return false;
     }
 
-    void ContentGroup::add_content_name(const std::string& content_name){
-        if(!has_content_name(content_name)){
-            _content_names.push_back(content_name);
-        }
+    void ContentGroup::add_content_name(const std::string &content_name) {
+      if (!has_content_name(content_name)) {
+        _content_names.push_back(content_name);
+      }
     }
 
     SessionDescription::SessionDescription(SdpType type) : _sdp_type(type)
