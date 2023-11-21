@@ -198,6 +198,14 @@ std::string UDPPort::to_string(){
 }
 
 
+int UDPPort::send_to(const char* buf, size_t len, const rtc::SocketAddress& addr){
+    if(!_async_socket){
+        return -1;
+    }
+    return _async_socket->send_to(buf, len, addr);
+}
+
+
 void UDPPort::send_binding_error_response(StunMessage* stun_msg, const rtc::SocketAddress& addr, int err_code, const std::string& reason){
  // TODO impl
 }

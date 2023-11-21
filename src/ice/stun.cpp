@@ -471,7 +471,7 @@ namespace grtc
         return true;
     }
 
-    bool StunMessage::write(rtc::ByteBufferWriter* buf){
+    bool StunMessage::write(rtc::ByteBufferWriter* buf) const{
         if(!buf){
             return false;
         }

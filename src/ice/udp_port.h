@@ -28,6 +28,10 @@ public:
     ~UDPPort();
     std::string ice_ufrag(){return _ice_params.ice_ufrag;}
     std::string ice_pwd(){return _ice_params.ice_pwd;}
+
+    const std::string& transport_name() { return _transport_name;}
+    IceCandidateComponent component() { return _component;}
+    const rtc::SocketAddress& local_addr() { return _local_addr;}
     //bool get_stun_message(const char* data, size_t len, std::unique_ptr<StunMessage>* out_msg);
     // bool get_stun_message(const char* data, size_t len,
     //                         const rtc::SocketAddress& addr, std::unique_ptr<StunMessage>* out_msg,
@@ -40,6 +44,8 @@ public:
     IceConnection* get_connection(const rtc::SocketAddress& addr);
     //定义信号
     sigslot::signal4<UDPPort*, const rtc::SocketAddress&,StunMessage*,const std::string&> signal_unknown_address;
+
+    int send_to(const char* buf, size_t len, const rtc::SocketAddress& addr);
 private:
     void _on_read_packet(AsyncUdpSocket* socket, char* buf, size_t size, const rtc::SocketAddress& addr, int64_t ts);
     bool get_stun_message(const char * data, size_t len, const rtc::SocketAddress & addr, std::unique_ptr<StunMessage>* out_msg, std::string * out_username);

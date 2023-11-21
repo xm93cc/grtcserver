@@ -80,7 +80,7 @@ class StunMessage {
     ~StunMessage();
     //读取StunMessage
     bool read(rtc::ByteBufferReader* buf);
-    bool write(rtc::ByteBufferWriter* buf);
+    bool write(rtc::ByteBufferWriter* buf) const;
 
     StunAttributeValueType get_attrribute_value_type(int type);
     const StunByteStringAttribute* get_byte_string(uint16_t type);
@@ -178,7 +178,7 @@ public:
     StunUint32Attribute(uint16_t type, uint32_t value);
     ~StunUint32Attribute()override{}
     uint32_t value()const{return _bits;}
-    uint32_t set_value(uint32_t value){ _bits =value;}
+    void set_value(uint32_t value){ _bits =value;}
 
     bool read(rtc::ByteBufferReader* buf)override;
     bool write(rtc::ByteBufferWriter* buf) override;

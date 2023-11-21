@@ -24,6 +24,34 @@ void IceConnection::send_stun_binding_response(StunMessage* stun_msg){
     response.add_attribute(std::make_unique<StunXorAddressAttribute>(STUN_ATTR_XOR_MAPPED_ADDRESS, remote_candidate().address));
     response.add_message_integrity(_port->ice_pwd());
     response.add_fingerprint();
+    send_response_message(response);
+}
+
+void IceConnection::send_response_message(const StunMessage& response) {
+  const rtc::SocketAddress& addr = _remote_candidate.address;
+  rtc::ByteBufferWriter buf;
+  if (!response.write(&buf)) {
+    return;
+  }
+  if (_port->send_to(buf.Data(), buf.Length(), addr) < 0) {
+    RTC_LOG(LS_WARNING) << to_string() << ": send "
+                        << stun_method_to_string(response.type())
+                        << " error, addr=" << addr.ToString() << ", id="
+                        << rtc::hex_encode(response.transaction_id());
+    return;
+  }
+  RTC_LOG(LS_WARNING) << to_string() << ": sent "
+                      << stun_method_to_string(response.type())
+                      << " addr=" << addr.ToString()
+                      << ", id=" << rtc::hex_encode(response.transaction_id());
+}
+
+std::string IceConnection::to_string() {
+  std::stringstream ss;
+  ss << "Conn[" << this << ":" << _port->transport_name() << ":"
+     << _port->component() << ":" << _port->local_addr().ToString() << "->"
+     << _remote_candidate.address.ToString();
+  return ss.str();
 }
 
 void IceConnection::handle_stun_binding_request(StunMessage* stun_msg){
