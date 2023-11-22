@@ -50,6 +50,8 @@ namespace grtc{
      * @Description: 读取socket接收数据包时间
      */
     int64_t sock_get_recv_timestamp(int sock);
+    
+    int sock_send_to(int sock, const char* buf,  size_t len, int flag, struct sockaddr* addr, socklen_t addr_len);
 }//namespace grtc
 
 #endif //__BASE_SOCKET_H_

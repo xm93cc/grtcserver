@@ -30,6 +30,9 @@ class UdpPacketData {
       _data = nullptr;
     }
   }
+  char* data() { return _data; }
+  size_t size() { return _size; }
+  const rtc::SocketAddress& addr() { return _addr; }
 };
 
 class AsyncUdpSocket{
