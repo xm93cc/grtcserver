@@ -21,12 +21,14 @@ const size_t k_stun_message_integrity_size = 20;
 
 enum StunMessageType{
   STUN_BINDING_REQUEST = 0x0001,
-  STUN_BINDING_RESPONSE = 0x0101
+  STUN_BINDING_RESPONSE = 0x0101,
+  STUN_BINDING_ERROR_RESPONSE = 0x0111,
 };
 
 enum StunAttributeType{
   STUN_ATTR_USERNAME = 0x0006, 
   STUN_ATTR_MESSAGE_INTEGRITY = 0x0008,
+  STUN_ATTR_ERROR_CODE = 0x0009,
   STUN_ATTR_XOR_MAPPED_ADDRESS = 0x020,
   STUN_ATTR_PRIORITY = 0x0024,
   STUN_ATTR_FINGERPRINT = 0x8028,
@@ -40,7 +42,7 @@ enum StunAttributeValueType{
 
 enum StunErrorCode{
   STUN_ERROR_BAD_REQUEST = 400,
-  STUN_ERROR_UNATHORIZED = 401,
+  STUN_ERROR_UNAUTHORIZED = 401,
   STUN_ERROR_SERVER_ERROR = 500,
 };
 
@@ -51,13 +53,14 @@ enum StunAddressFamily{
 };
 
 extern const char STUN_ERROR_REASON_BAD_REQUEST[];
-extern const char STUN_ERROR_REASON_UNATHORIZED[];
+extern const char STUN_ERROR_REASON_UNAUTHORIZED[];
 extern const char STUN_ERROR_REASON_SERVER_ERROR[];
 std::string stun_method_to_string(int type);
 
 class StunAttribute;
 class StunByteStringAttribute;
 class StunUint32Attribute;
+class StunErrorCodeAttribute;
 class StunMessage {
 
   private:
@@ -131,6 +134,7 @@ class StunAttribute {
     void set_length(uint16_t len){_length = len;}
 
     static StunAttribute* create(StunAttributeValueType value_type, uint16_t type, uint16_t length, void* owner);
+    static std::unique_ptr<StunErrorCodeAttribute> create_error_code();
   protected:
     StunAttribute(uint16_t type, uint16_t length);
     void consume_padding(rtc::ByteBufferReader* buf);
@@ -197,6 +201,22 @@ class StunByteStringAttribute : public StunAttribute {
      void _set_bytes(char* bytes);
   private:
     char *_bytes = nullptr;
+};
+
+class StunErrorCodeAttribute : public StunAttribute {
+ public:
+  static const uint16_t MIN_SIZE;
+  StunErrorCodeAttribute(uint16_t type, uint16_t length);
+  ~StunErrorCodeAttribute() override = default;
+  void set_code(int code);
+  void set_reason(const std::string& reason);
+  bool read(rtc::ByteBufferReader* buf) override;
+  bool write(rtc::ByteBufferWriter* buf) override;
+
+ private:
+  uint8_t _class;
+  uint8_t _number;
+  std::string _reason;
 };
 } // namespace grtc
 

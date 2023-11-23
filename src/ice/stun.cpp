@@ -9,7 +9,7 @@ namespace grtc
     const char EMPTY_TRANSACTION_ID[] = "000000000000";
     const size_t STUN_FINGERPRINT_XOR_VALUE = 0x5354554e;
     const char STUN_ERROR_REASON_BAD_REQUEST[] = "Bad request";
-    const char STUN_ERROR_REASON_UNATHORIZED[] = "Unathorized";
+    const char STUN_ERROR_REASON_UNAUTHORIZED[] = "Unauthorized";
     const char STUN_ERROR_REASON_SERVER_ERROR[] = "Server error";
     std::string stun_method_to_string(int type){
         switch (type)
@@ -18,6 +18,8 @@ namespace grtc
             return "BINDING REQUEST";
         case STUN_BINDING_RESPONSE:
             return "BINDING RESPONSE";
+        case STUN_BINDING_ERROR_RESPONSE:
+            return "BINDING ERROR_RESPONSE";
         default:
             return "Unknown<" + std::to_string(type) + ">";
         }
@@ -331,6 +333,11 @@ namespace grtc
             buf->WriteBytes(padding, 4- remain);
         }
     }
+    
+    std::unique_ptr<StunErrorCodeAttribute> StunAttribute::create_error_code() {
+      return std::make_unique<StunErrorCodeAttribute>(
+          STUN_ATTR_ERROR_CODE, StunErrorCodeAttribute::MIN_SIZE);
+    }
 
     bool StunByteStringAttribute::read(rtc::ByteBufferReader *buf)
     {
@@ -572,6 +579,34 @@ namespace grtc
             return false;
         }
         return memcmp(data + mi_pos + k_stun_attribute_header_size, hmac, mi_attr_size) == 0;
+    }
+
+    const uint16_t StunErrorCodeAttribute::MIN_SIZE = 4;
+    StunErrorCodeAttribute::StunErrorCodeAttribute(uint16_t type,
+                                                   uint16_t length)
+        : StunAttribute(type, length), _class(0), _number(0) {}
+
+
+    void StunErrorCodeAttribute::set_code(int code) {
+      _class = code / 100;
+      _number = code % 100;
+    }
+
+    void StunErrorCodeAttribute::set_reason(const std::string& reason) {
+      _reason = reason;
+      set_length(MIN_SIZE + reason.size());
+    }
+
+    bool StunErrorCodeAttribute::read(rtc::ByteBufferReader* buf){
+        //todo
+        return false;
+    }
+
+    bool StunErrorCodeAttribute::write(rtc::ByteBufferWriter* buf){
+        buf->WriteUInt32(_class << 8 | _number);
+        buf->WriteString(_reason);
+        write_padding(buf);
+        return true;
     }
 
 } // namespace grtc

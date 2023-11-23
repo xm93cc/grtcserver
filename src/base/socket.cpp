@@ -261,6 +261,6 @@ namespace grtc{
             << "sendto error: " << strerror(errno) << ", erron: " << errno;
         return -1;
       }
-      return -1;
+      return sent;
     }
 } // namespace grtc
