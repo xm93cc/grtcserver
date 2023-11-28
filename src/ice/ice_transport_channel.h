@@ -14,6 +14,7 @@
 #include "ice/candidate.h"
 #include "ice/stun.h"
 #include "ice/udp_port.h"
+#include "ice/ice_controller.h"
 namespace grtc
 {
 class IceTransportChannel : public sigslot::has_slots<> {
@@ -30,6 +31,10 @@ public:
     void _on_unknown_address(UDPPort* port, const rtc::SocketAddress& addr,StunMessage* msg,const std::string& remote_ufrag);
     std::string to_string();
 private:
+    void _sort_connections_and_update_state();
+    void _maybe_start_pinging();
+    void _add_connection(IceConnection* conn);
+private:
     EventLoop* _el;
     PortAllocator* _allocator;
     std::string _transport_name;
@@ -37,6 +42,8 @@ private:
     IceParameters _ice_params;
     IceParameters _remote_ice_params;
     std::vector<Candidate> _local_candidates;
+    std::unique_ptr<IceController> _ice_controller;
+    bool _start_pinging = false;
 };
     
 } // namespace grtc
