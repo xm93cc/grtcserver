@@ -98,4 +98,11 @@ void IceConnection::on_read_packet(const char* buf, size_t len, uint64_t ts) {
   }
 }
 
+void IceConnection::maybe_set_remote_ice_params(const IceParameters& params) {
+  if (_remote_candidate.username == params.ice_ufrag &&
+      _remote_candidate.password.empty()) {
+    _remote_candidate.password = params.ice_pwd;
+  }
+}
+
 } // namespace grtc

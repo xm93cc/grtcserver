@@ -34,6 +34,8 @@ private:
     void _sort_connections_and_update_state();
     void _maybe_start_pinging();
     void _add_connection(IceConnection* conn);
+    void _on_check_and_ping();
+    friend void ice_ping_cb(EventLoop* /*el*/, TimerWatcher* /*w*/, void* data);
 private:
     EventLoop* _el;
     PortAllocator* _allocator;
@@ -44,6 +46,7 @@ private:
     std::vector<Candidate> _local_candidates;
     std::unique_ptr<IceController> _ice_controller;
     bool _start_pinging = false;
+    TimerWatcher* _ping_watcher = nullptr;
 };
     
 } // namespace grtc

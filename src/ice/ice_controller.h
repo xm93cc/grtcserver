@@ -15,6 +15,8 @@ class IceController {
 
   void add_connection(IceConnection* conn);
 
+  const std::vector<IceConnection*> connectios(){return _connections;}
+
  private:
   bool _weak() {
     return _selected_connection == nullptr || _selected_connection->weak();

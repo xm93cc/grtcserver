@@ -3,6 +3,7 @@
 #include "base/event_loop.h"
 #include "ice/candidate.h"
 #include "ice/stun.h"
+#include "ice/ice_credentials.h"
 namespace grtc
 {
 class UDPPort;
@@ -30,6 +31,9 @@ public:
     bool weak() {return !(writable() && receving());}
 
     bool active() {return _write_state != STATE_WRITE_TIMEOUT;}
+
+    void maybe_set_remote_ice_params(const IceParameters& params); 
+
 
     std::string to_string();
 private:
