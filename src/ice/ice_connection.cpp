@@ -105,4 +105,9 @@ void IceConnection::maybe_set_remote_ice_params(const IceParameters& params) {
   }
 }
 
+bool IceConnection::stable(int64_t now) const {
+  //todo
+  return false;
+}
+
 } // namespace grtc

@@ -5,6 +5,13 @@
 #include "ice/ice_connection.h"
 namespace grtc {
 class IceTransportChannel;
+struct PingResult {
+  PingResult(const IceConnection* conn, int ping_interval)
+      : conn(conn), ping_interval(ping_interval) {}
+  const IceConnection* conn = nullptr;
+  int ping_interval = 0;
+};
+
 class IceController {
  public:
   IceController(IceTransportChannel* ice_channel) : _ice_channel(ice_channel) {}
@@ -17,6 +24,8 @@ class IceController {
 
   const std::vector<IceConnection*> connectios(){return _connections;}
 
+  PingResult selected_connection_to_ping(int64_t last_ping_sent_ms);
+
  private:
   bool _weak() {
     return _selected_connection == nullptr || _selected_connection->weak();
@@ -24,6 +33,12 @@ class IceController {
 
  private:
   bool _is_pingable(IceConnection* conn);
+
+  const IceConnection* _find_next_pingable_connection(int64_t now_ms);
+
+  bool _is_connection_past_ping_interval(const IceConnection* conn, int64_t now_ms);
+
+  int _get_connection_ping_interval(const IceConnection* conn , int64_t now_ms);
 
  private:
   IceTransportChannel* _ice_channel;
