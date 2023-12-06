@@ -4,6 +4,13 @@
 namespace grtc
 {
 
+void ConnectionRequest::prepare(StunMessage* msg){
+  
+}
+
+ConnectionRequest::ConnectionRequest(IceConnection* conn)
+    : StunRequest(new StunMessage), _connections(conn) {}
+
 IceConnection::IceConnection(EventLoop* el, UDPPort* port, const Candidate& remote_candidate)
 :_el(el),_port(port),_remote_candidate(remote_candidate)
 {
@@ -108,6 +115,12 @@ void IceConnection::maybe_set_remote_ice_params(const IceParameters& params) {
 bool IceConnection::stable(int64_t now) const {
   //todo
   return false;
+}
+
+void IceConnection::ping(int64_t now_ms){
+  ConnectionRequest* request = new ConnectionRequest(this);
+  _pings_since_last_response.push_back(SentPing(request->id(), now_ms));
+
 }
 
 } // namespace grtc

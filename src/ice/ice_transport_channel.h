@@ -35,6 +35,7 @@ private:
     void _maybe_start_pinging();
     void _add_connection(IceConnection* conn);
     void _on_check_and_ping();
+    void _ping_connection(IceConnection* conn);
     friend void ice_ping_cb(EventLoop* /*el*/, TimerWatcher* /*w*/, void* data);
 private:
     EventLoop* _el;

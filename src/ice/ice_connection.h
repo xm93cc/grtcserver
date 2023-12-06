@@ -3,10 +3,23 @@
 #include "base/event_loop.h"
 #include "ice/candidate.h"
 #include "ice/stun.h"
+#include "ice/stun_request.h"
 #include "ice/ice_credentials.h"
 namespace grtc
 {
 class UDPPort;
+class IceConnection;
+class ConnectionRequest : public StunRequest{
+public:
+    ConnectionRequest(IceConnection* conn);
+
+protected:
+    void prepare(StunMessage* msg) override;
+private:
+    IceConnection* _connections;
+
+};
+
 class IceConnection{
 public:
     enum WriteState{
@@ -14,6 +27,12 @@ public:
         STATE_WRITE_UNRELIABLE = 1,
         STATE_WRITE_INIT = 2,
         STATE_WRITE_TIMEOUT = 3
+    };
+
+    struct SentPing {
+      SentPing(const std::string& id, int64_t ts) : id(id), sent_time(ts) {}
+      std::string id;
+      int64_t sent_time;
     };
     IceConnection(EventLoop* el, UDPPort* port, const Candidate& remote_candidate);
     ~IceConnection();
@@ -40,6 +59,8 @@ public:
 
     int num_pings_sent() const {return _num_pings_sent;}
 
+    void ping(int64_t now_ms);
+
     std::string to_string();
 private:
     EventLoop* _el;
@@ -49,6 +70,7 @@ private:
     bool _receiving = false;
     int64_t _last_ping_sent = 0;
     int _num_pings_sent = 0;
+    std::vector<SentPing> _pings_since_last_response;
 };
 } // namespace grtc
 
