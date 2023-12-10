@@ -251,6 +251,31 @@ namespace grtc
 
 
 
+    // uint64
+    
+
+    StunUint64Attribute::StunUint64Attribute(uint16_t type)
+    :StunAttribute(type, SIZE), _bits(0){}
+
+    StunUint64Attribute::StunUint64Attribute(uint16_t type, uint64_t value)
+    :StunAttribute(type, SIZE), _bits(value){}
+   
+    bool StunUint64Attribute::read(rtc::ByteBufferReader* buf){
+        if(length() != SIZE || !buf->ReadUInt64(&_bits)){
+            return false;
+        }
+        return true;
+    }
+
+    bool StunUint64Attribute::write(rtc::ByteBufferWriter* buf){
+        buf->WriteUInt64(_bits);
+        return true;
+    }
+
+
+
+
+
     // byteString
     const StunByteStringAttribute *StunMessage::get_byte_string(uint16_t type)
     {

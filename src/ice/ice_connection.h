@@ -16,7 +16,7 @@ public:
 protected:
     void prepare(StunMessage* msg) override;
 private:
-    IceConnection* _connections;
+    IceConnection* _connection;
 
 };
 
@@ -34,11 +34,19 @@ public:
       std::string id;
       int64_t sent_time;
     };
+
     IceConnection(EventLoop* el, UDPPort* port, const Candidate& remote_candidate);
+
     ~IceConnection();
-    const Candidate& remote_candidate() const {return _remote_candidate;} 
+
+    const Candidate& remote_candidate() const { return _remote_candidate; }
+    
+    const Candidate& local_candidate() const;
+
     void on_read_packet(const char* buf, size_t size, uint64_t ts);
+
     void handle_stun_binding_request(StunMessage* stun_msg);
+
     void send_stun_binding_response(StunMessage* stun_msg);
 
     void send_response_message(const StunMessage& resp);
@@ -61,6 +69,8 @@ public:
 
     void ping(int64_t now_ms);
 
+    UDPPort* port() { return _port; }
+
     std::string to_string();
 private:
     EventLoop* _el;
@@ -71,6 +81,7 @@ private:
     int64_t _last_ping_sent = 0;
     int _num_pings_sent = 0;
     std::vector<SentPing> _pings_since_last_response;
+    StunRequestManager _requests;
 };
 } // namespace grtc
 

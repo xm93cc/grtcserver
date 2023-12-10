@@ -5,11 +5,32 @@ namespace grtc
 {
 
 void ConnectionRequest::prepare(StunMessage* msg){
-  
+  msg->set_type(STUN_BINDING_REQUEST);
+  std::string username;
+  _connection->port()->create_stun_username(
+      _connection->remote_candidate().username, &username);
+  msg->add_attribute(
+      std::make_unique<StunByteStringAttribute>(STUN_ATTR_USERNAME, username));
+  msg->add_attribute(
+      std::make_unique<StunUint64Attribute>(STUN_ATTR_ICE_CONTROLLING, 0));
+  msg->add_attribute(
+      std::make_unique<StunByteStringAttribute>(STUN_ATTR_USE_CANDIDATE, 0));
+  // priority
+  int type_pref = ICE_TYPE_PREFERENCE_PRFLX;
+  uint32_t prflx_priority = (type_pref << 24) | (_connection->local_candidate().priority & 0x00FFFFFF);
+  msg->add_attribute(std::make_unique<StunUint32Attribute>(STUN_ATTR_PRIORITY,prflx_priority));
+  msg->add_message_integrity(_connection->remote_candidate().password);
+  msg->add_fingerprint();
 }
 
 ConnectionRequest::ConnectionRequest(IceConnection* conn)
-    : StunRequest(new StunMessage), _connections(conn) {}
+    : StunRequest(new StunMessage), _connection(conn) {}
+
+
+
+const Candidate& IceConnection::local_candidate() const{
+  return _port->candidates()[0];
+}
 
 IceConnection::IceConnection(EventLoop* el, UDPPort* port, const Candidate& remote_candidate)
 :_el(el),_port(port),_remote_candidate(remote_candidate)
@@ -120,6 +141,8 @@ bool IceConnection::stable(int64_t now) const {
 void IceConnection::ping(int64_t now_ms){
   ConnectionRequest* request = new ConnectionRequest(this);
   _pings_since_last_response.push_back(SentPing(request->id(), now_ms));
+  _requests.send(request);
+  _num_pings_sent++;
 
 }
 

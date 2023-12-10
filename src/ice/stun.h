@@ -31,7 +31,9 @@ enum StunAttributeType{
   STUN_ATTR_ERROR_CODE = 0x0009,
   STUN_ATTR_XOR_MAPPED_ADDRESS = 0x020,
   STUN_ATTR_PRIORITY = 0x0024,
+  STUN_ATTR_USE_CANDIDATE = 0x0025,
   STUN_ATTR_FINGERPRINT = 0x8028,
+  STUN_ATTR_ICE_CONTROLLING = 0x802A,
 };
 
 enum StunAttributeValueType{
@@ -177,7 +179,6 @@ private:
 class StunUint32Attribute : public StunAttribute{
 public:
     static const size_t SIZE = 4;
-    uint32_t _bits;
     StunUint32Attribute(uint16_t type);
     StunUint32Attribute(uint16_t type, uint32_t value);
     ~StunUint32Attribute()override{}
@@ -186,8 +187,29 @@ public:
 
     bool read(rtc::ByteBufferReader* buf)override;
     bool write(rtc::ByteBufferWriter* buf) override;
+private:
+   uint32_t _bits;
+};
+
+
+class StunUint64Attribute : public StunAttribute{
+public:
+    static const size_t SIZE = 4;
+ 
+    StunUint64Attribute(uint16_t type);
+    StunUint64Attribute(uint16_t type, uint64_t value);
+    ~StunUint64Attribute()override{}
+    uint64_t value()const{return _bits;}
+    void set_value(uint64_t value){ _bits =value;}
+
+    bool read(rtc::ByteBufferReader* buf)override;
+    bool write(rtc::ByteBufferWriter* buf) override;
+private:
+    uint64_t _bits;
 
 };
+
+
 class StunByteStringAttribute : public StunAttribute {
   public:
     StunByteStringAttribute(uint16_t type, uint16_t length);
