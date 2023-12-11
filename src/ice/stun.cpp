@@ -420,7 +420,7 @@ namespace grtc
     void StunMessage::add_attribute(std::unique_ptr<StunAttribute> attr){
         size_t attr_len = attr->length();
         if (attr_len % 4 != 0){
-            attr_len += (attr_len + (attr_len % 4));
+            attr_len += (4 - (attr_len % 4));
         }
         _length += (attr_len + k_stun_attribute_header_size);
         _attrs.push_back(std::move(attr));

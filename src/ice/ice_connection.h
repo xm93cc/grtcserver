@@ -20,7 +20,7 @@ private:
 
 };
 
-class IceConnection{
+class IceConnection : public sigslot::has_slots<>{
 public:
     enum WriteState{
         STATE_WRITABLE = 0,
@@ -72,6 +72,9 @@ public:
     UDPPort* port() { return _port; }
 
     std::string to_string();
+
+private:
+    void _on_stun_send_packet(StunRequest* request, const char* data, size_t len);
 private:
     EventLoop* _el;
     UDPPort* _port;

@@ -32,9 +32,20 @@ const Candidate& IceConnection::local_candidate() const{
   return _port->candidates()[0];
 }
 
+void IceConnection::_on_stun_send_packet(StunRequest* request, const char* data,
+                                         size_t len) {
+  int ret = _port->send_to(data, len, _remote_candidate.address);
+  if (ret < 0) {
+    RTC_LOG(LS_WARNING) << to_string()
+                        << ": Failed to send STUN binding request: ret = "
+                        << ret << ", id=" << rtc::hex_encode(request->id());
+  }
+}
+
 IceConnection::IceConnection(EventLoop* el, UDPPort* port, const Candidate& remote_candidate)
 :_el(el),_port(port),_remote_candidate(remote_candidate)
 {
+  _requests.signal_send_packet.connect(this, &IceConnection::_on_stun_send_packet);
 }
 
 IceConnection::~IceConnection(){

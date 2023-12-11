@@ -194,7 +194,7 @@ private:
 
 class StunUint64Attribute : public StunAttribute{
 public:
-    static const size_t SIZE = 4;
+    static const size_t SIZE = 8;
  
     StunUint64Attribute(uint16_t type);
     StunUint64Attribute(uint16_t type, uint64_t value);
