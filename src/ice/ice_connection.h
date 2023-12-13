@@ -14,7 +14,10 @@ public:
     ConnectionRequest(IceConnection* conn);
 
 protected:
-    void prepare(StunMessage* msg) override;
+    void prepare(StunMessage* msg) override;  
+    void on_response(StunMessage*) override;
+    void on_error_response(StunMessage*) override;
+
 private:
     IceConnection* _connection;
 
@@ -73,8 +76,13 @@ public:
 
     std::string to_string();
 
+    void on_connection_error_response(ConnectionRequest* request, StunMessage* msg);
+
+    void on_connection_response(ConnectionRequest* request, StunMessage* msg);
+
 private:
     void _on_stun_send_packet(StunRequest* request, const char* data, size_t len);
+
 private:
     EventLoop* _el;
     UDPPort* _port;
