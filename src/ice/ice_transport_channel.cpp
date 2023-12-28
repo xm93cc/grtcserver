@@ -156,7 +156,7 @@ void IceTransportChannel::_maybe_start_pinging(){
 
 void IceTransportChannel::_on_check_and_ping(){
   auto result = _ice_controller->selected_connection_to_ping(_last_ping_sent_ms - PING_INTERVAL_DIFF);
-  RTC_LOG(LS_WARNING) << "=======conn: " << result.conn
+  RTC_LOG(LS_WARNING) << "=========>> conn: " << result.conn
                       << ", ping interval: " << result.ping_interval;
   if (result.conn){
      _ping_connection((IceConnection*)result.conn);

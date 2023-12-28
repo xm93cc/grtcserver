@@ -1,3 +1,4 @@
+#include <rtc_base/time_utils.h>
 #include "ice/udp_port.h"
 #include "ice/ice_connection.h"
 
@@ -23,11 +24,11 @@ void ConnectionRequest::prepare(StunMessage* msg){
   msg->add_fingerprint();
 }
 
-void ConnectionRequest::on_response(StunMessage* msg) {
-  _connection->on_connection_response(this, msg);
+void ConnectionRequest::on_request_response(StunMessage* msg) {
+  _connection->on_connection_request_response(this, msg);
 }
-void ConnectionRequest::on_error_response(StunMessage* msg) {
-  _connection->on_connection_error_response(this, msg);
+void ConnectionRequest::on_request_error_response(StunMessage* msg) {
+  _connection->on_connection_request_error_response(this, msg);
 }
 
 ConnectionRequest::ConnectionRequest(IceConnection* conn)
@@ -39,12 +40,82 @@ const Candidate& IceConnection::local_candidate() const{
   return _port->candidates()[0];
 }
 
-void IceConnection::on_connection_error_response(ConnectionRequest* request, StunMessage* msg) {
+void IceConnection::print_pings_since_last_response(std::string& pings,
+                                                    int max) {
+  std::stringstream ss;
+  if (_pings_since_last_response.size() > max) {
+    for (size_t i = 0; i < max; i++) {
+      ss << rtc::hex_encode(_pings_since_last_response[i].id) << " ";
+    }
+    ss << "... " << _pings_since_last_response.size() - max << " more";
+  } else {
+    for (auto ping : _pings_since_last_response) {
+      ss << rtc::hex_encode(ping.id) << " ";
+    }
+  }
+
+  pings = ss.str();
+}
+
+void IceConnection::on_connection_request_error_response(ConnectionRequest* request, StunMessage* msg) {
 
 }
 
-void IceConnection::on_connection_response(ConnectionRequest* request, StunMessage* msg) {
+int64_t IceConnection::last_received() {
+  return std::max(std::max(_last_ping_received, _last_ping_response_received),
+                  _last_data_received);
+}
 
+int IceConnection::receiving_timeout() {
+  return WEAK_CONNECTION_RECEIVE_TIMEOUT;
+}
+
+void IceConnection::update_receiving(int64_t now_ts) {
+  bool receiving;
+  if (_last_ping_sent < _last_ping_response_received) {
+    receiving = true;
+  } else {
+    receiving =
+        last_received() > 0 && (now_ts < last_received() + receiving_timeout());
+  }
+
+  if (_receiving == receiving) {
+    return;
+  }
+
+  RTC_LOG(LS_INFO) << to_string() << ": set receiving to " << receiving;
+  _receiving = receiving;
+  singal_state_change(this);
+}
+
+void IceConnection::set_write_state(WriteState state) {
+  WriteState old_state = _write_state;
+  _write_state = state;
+  if (old_state != state) {
+    RTC_LOG(LS_INFO) << to_string() << ": set write state from " << old_state
+                     << " to " << state;
+    singal_state_change(this);
+  }
+}
+
+void IceConnection::received_ping_response(int rtt) {
+  _last_ping_response_received = rtc::TimeMillis();
+  //一旦收到成功的ping响应之后清理缓存
+  _pings_since_last_response.clear();
+  update_receiving(_last_ping_response_received);
+  set_write_state(STATE_WRITABLE);
+}
+
+void IceConnection::on_connection_request_response(ConnectionRequest* request,
+                                                   StunMessage* msg) {
+  int rtt = request->elapsed();
+  std::string pings;
+  print_pings_since_last_response(pings, 5);
+  RTC_LOG(LS_INFO) << to_string() << ": Received "
+                      << stun_method_to_string(msg->type())
+                      << ", id=" << rtc::hex_encode(msg->transaction_id())
+                      << ", rtt=" << rtt << ", pings=" << pings;
+  received_ping_response(rtt);
 }
 
 void IceConnection::_on_stun_send_packet(StunRequest* request, const char* data,
@@ -170,12 +241,13 @@ bool IceConnection::stable(int64_t now) const {
   return false;
 }
 
-void IceConnection::ping(int64_t now_ms){
+void IceConnection::ping(int64_t now_ms) {
   ConnectionRequest* request = new ConnectionRequest(this);
   _pings_since_last_response.push_back(SentPing(request->id(), now_ms));
+  RTC_LOG(LS_INFO) << to_string() << ": Sending STUN ping, id="
+                   << rtc::hex_encode(request->id());
   _requests.send(request);
   _num_pings_sent++;
-
 }
 
 } // namespace grtc

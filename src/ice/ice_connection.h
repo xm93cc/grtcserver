@@ -15,8 +15,8 @@ public:
 
 protected:
     void prepare(StunMessage* msg) override;  
-    void on_response(StunMessage*) override;
-    void on_error_response(StunMessage*) override;
+    void on_request_response(StunMessage*) override;
+    void on_request_error_response(StunMessage*) override;
 
 private:
     IceConnection* _connection;
@@ -76,10 +76,23 @@ public:
 
     std::string to_string();
 
-    void on_connection_error_response(ConnectionRequest* request, StunMessage* msg);
+    void on_connection_request_error_response(ConnectionRequest* request, StunMessage* msg);
 
-    void on_connection_response(ConnectionRequest* request, StunMessage* msg);
+    void on_connection_request_response(ConnectionRequest* request, StunMessage* msg);
 
+    void print_pings_since_last_response(std::string& pings, int max);
+
+    void received_ping_response(int rtt);
+
+    void update_receiving(int64_t now_ts);
+
+    int64_t last_received();
+
+    int receiving_timeout();
+
+    sigslot::signal1<IceConnection*> singal_state_change;
+
+    void set_write_state(WriteState state);
 private:
     void _on_stun_send_packet(StunRequest* request, const char* data, size_t len);
 
@@ -93,6 +106,9 @@ private:
     int _num_pings_sent = 0;
     std::vector<SentPing> _pings_since_last_response;
     StunRequestManager _requests;
+    int64_t _last_ping_response_received = 0;
+    int64_t _last_ping_received = 0;
+    int64_t _last_data_received = 0;
 };
 } // namespace grtc
 
