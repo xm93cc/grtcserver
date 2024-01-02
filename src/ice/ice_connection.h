@@ -95,6 +95,11 @@ public:
     void set_write_state(WriteState state);
 
     WriteState write_state(){ return _write_state; }
+
+    uint64_t priority();
+
+    int rtt(){return _rtt;}
+
 private:
     void _on_stun_send_packet(StunRequest* request, const char* data, size_t len);
 
@@ -111,6 +116,9 @@ private:
     int64_t _last_ping_response_received = 0;
     int64_t _last_ping_received = 0;
     int64_t _last_data_received = 0;
+    int _rtt = 3000;
+    int _rtt_samples = 0;
+    
 };
 } // namespace grtc
 

@@ -1,9 +1,12 @@
+#include <rtc_base/helpers.h>
 #include <rtc_base/time_utils.h>
 #include "ice/udp_port.h"
 #include "ice/ice_connection.h"
 
 namespace grtc
 {
+
+const int RTT_RATIO = 3;
 
 void ConnectionRequest::prepare(StunMessage* msg){
   msg->set_type(STUN_BINDING_REQUEST);
@@ -99,6 +102,15 @@ void IceConnection::set_write_state(WriteState state) {
 }
 
 void IceConnection::received_ping_response(int rtt) {
+  // old_rtt : new_rtt = 3 : 1
+  // 5 10 20
+  // rtt = 5
+  // rtt = 5 * 0.75 + 10 * 0.25 = 3.75 + 2.5 = 6.25
+  if (_rtt_samples > 0){
+    _rtt = rtc::GetNextMovingAverage(_rtt, rtt, RTT_RATIO);
+  }else{
+    _rtt = rtt;
+  }
   _last_ping_response_received = rtc::TimeMillis();
   //一旦收到成功的ping响应之后清理缓存
   _pings_since_last_response.clear();
@@ -180,6 +192,18 @@ std::string IceConnection::to_string() {
      << _port->component() << ":" << _port->local_addr().ToString() << "->"
      << _remote_candidate.address.ToString();
   return ss.str();
+}
+
+// rfc5245
+// g : controlling candidate priority
+// d : contrlled candidate priority
+// conn priority = 2^32 * min(g, d) + 2 * max(g, d) + (g > d ? 1 : 0)
+uint64_t IceConnection::priority() {
+  uint32_t g = local_candidate().priority;
+  uint32_t d = remote_candidate().priority;
+  uint32_t priority = std::min(g, d);
+  priority = priority << 32;
+  return priority + 2 * std::max(g, d) + (g > d ? 1 : 0);
 }
 
 void IceConnection::handle_stun_binding_request(StunMessage* stun_msg){
