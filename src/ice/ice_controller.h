@@ -27,6 +27,10 @@ class IceController {
 
   PingResult selected_connection_to_ping(int64_t last_ping_sent_ms);
 
+  IceConnection* sort_and_switch_connection();    
+
+  int _compare_connections(IceConnection* a, IceConnection* b);
+
  private:
   bool _weak() {
     return _selected_connection == nullptr || _selected_connection->weak();

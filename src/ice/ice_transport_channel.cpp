@@ -132,8 +132,12 @@ void  IceTransportChannel::_on_unknown_address(UDPPort* port, const rtc::SocketA
      _sort_connections_and_update_state();
 }
 
+void IceTransportChannel::_maybe_swtich_selected_connection(IceConnection* conn){
+
+}
 
 void IceTransportChannel::_sort_connections_and_update_state(){
+     _maybe_swtich_selected_connection(_ice_controller->sort_and_switch_connection());
      _maybe_start_pinging();
 }
 
@@ -168,13 +172,18 @@ void IceTransportChannel::_on_check_and_ping(){
   }
 }
 
-void IceTransportChannel::_ping_connection(IceConnection* conn){
-    _last_ping_sent_ms = rtc::TimeMillis();
-    conn->ping(_last_ping_sent_ms);
+void IceTransportChannel::_ping_connection(IceConnection* conn) {
+  _last_ping_sent_ms = rtc::TimeMillis();
+  conn->ping(_last_ping_sent_ms);
 }
 
+void IceTransportChannel::_on_connection_state_change(IceConnection* /*conn*/) {
+  _sort_connections_and_update_state();
+}
 
-void IceTransportChannel::_add_connection(IceConnection* conn){
-     _ice_controller->add_connection(conn);
+void IceTransportChannel::_add_connection(IceConnection* conn) {
+  conn->singal_state_change.connect(
+      this, &IceTransportChannel::_on_connection_state_change);
+  _ice_controller->add_connection(conn);
 }
 } // namespace grtc

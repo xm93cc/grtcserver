@@ -56,9 +56,9 @@ public:
 
     bool writable() {return _write_state == STATE_WRITABLE;}
 
-    bool receving() {return _receiving;}
+    bool receiving() {return _receiving;}
 
-    bool weak() {return !(writable() && receving());}
+    bool weak() {return !(writable() && receiving());}
 
     bool active() {return _write_state != STATE_WRITE_TIMEOUT;}
 
@@ -93,6 +93,8 @@ public:
     sigslot::signal1<IceConnection*> singal_state_change;
 
     void set_write_state(WriteState state);
+
+    WriteState write_state(){ return _write_state; }
 private:
     void _on_stun_send_packet(StunRequest* request, const char* data, size_t len);
 

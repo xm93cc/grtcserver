@@ -1,9 +1,13 @@
+#include <absl/algorithm/container.h>
 #include <rtc_base/logging.h>
 #include <rtc_base/time_utils.h>
 #include "ice/ice_controller.h"
 
 
 namespace grtc {
+
+const int a_is_better = 1;
+const int b_is_better = -1;
 
 bool IceController::has_pingable_connection() {
   for (auto conn : _connections) {
@@ -111,5 +115,36 @@ int IceController::_get_connection_ping_interval(const IceConnection* conn , int
   return STABLE_CONNECTION_PING_INTERVAL;
 }
 
+int IceController::_compare_connections(IceConnection* a, IceConnection* b) {
+  if (a->writable() && !b->writable()) {
+    return a_is_better;
+  }
+  if (!a->writable() && b->writable()) {
+    return b_is_better;
+  }
+  if (a->write_state() < b->write_state()) {
+    return a_is_better;
+  }
+  if (a->write_state() > b->write_state()) {
+    return b_is_better;
+  }
+  if (a->receiving() && !b->receiving()) {
+    return a_is_better;
+  }
+  if (!a->receiving() && b->receiving()) {
+    return b_is_better;
+  }
+  return 0;
+}
+
+IceConnection* IceController::sort_and_switch_connection() {
+  absl::c_stable_sort(_connections,
+                      [this](IceConnection* conn1, IceConnection* conn2) {
+                        int cmp = _compare_connections(conn1, conn2);
+                        if (cmp != 0) {
+                          return cmp > 0;
+                        }
+                      });
+}
 
 }  // namespace grtc

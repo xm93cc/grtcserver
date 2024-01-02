@@ -18,25 +18,45 @@
 namespace grtc
 {
 class IceTransportChannel : public sigslot::has_slots<> {
-public:
+public: 
     IceTransportChannel(EventLoop* el,PortAllocator* allocator, const std::string& transport_name,
                          IceCandidateComponent component);
+    
     virtual ~IceTransportChannel();
+    
     std::string transport_name() {return _transport_name;}
+    
     IceCandidateComponent component() {return _component;}
+    
     void gathering_candidate();
+    
     void set_ice_params(const IceParameters& ice_params);
+    
     void set_remote_ice_params(const IceParameters& ice_params);
+    
     sigslot::signal2<IceTransportChannel*, const std::vector<Candidate>&> signal_candidate_allocate_done;
+    
     void _on_unknown_address(UDPPort* port, const rtc::SocketAddress& addr,StunMessage* msg,const std::string& remote_ufrag);
+    
     std::string to_string();
+
 private:
     void _sort_connections_and_update_state();
+    
     void _maybe_start_pinging();
+    
     void _add_connection(IceConnection* conn);
+    
     void _on_check_and_ping();
+    
     void _ping_connection(IceConnection* conn);
+
     friend void ice_ping_cb(EventLoop* /*el*/, TimerWatcher* /*w*/, void* data);
+
+    void _on_connection_state_change(IceConnection* conn);
+
+    void _maybe_swtich_selected_connection(IceConnection* conn);
+    
 private:
     EventLoop* _el;
     PortAllocator* _allocator;
