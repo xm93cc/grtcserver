@@ -8,6 +8,7 @@ namespace grtc {
 
 const int a_is_better = 1;
 const int b_is_better = -1;
+const int k_min_improvement = 10;
 
 bool IceController::has_pingable_connection() {
   for (auto conn : _connections) {
@@ -143,7 +144,14 @@ int IceController::_compare_connections(IceConnection* a, IceConnection* b) {
   return 0;
 }
 
+bool IceController::_ready_to_send(IceConnection* conn) {
+  return conn &&
+         (conn->writable() ||
+          conn->write_state() == IceConnection::STATE_WRITE_UNRELIABLE);
+}
+
 IceConnection* IceController::sort_and_switch_connection() {
+  //排序connection
   absl::c_stable_sort(_connections,
                       [this](IceConnection* conn1, IceConnection* conn2) {
                         int cmp = _compare_connections(conn1, conn2);
@@ -152,6 +160,27 @@ IceConnection* IceController::sort_and_switch_connection() {
                         }
                         return conn1->rtt() < conn2->rtt();
                       });
+  RTC_LOG(LS_INFO) << "Sort " << _connections.size()
+                   << " available connections: ";
+  for (auto conn : _connections) {
+    RTC_LOG(LS_INFO) << conn->to_string();
+  }
+  //第一个元素就是最优的connection
+  IceConnection* top_connection = _connections.empty() ? nullptr : _connections[0];
+  //选中最优的connection 还不具备通讯的条件 or 
+  //选中的connection 和 排序出的最优connection 相等 则不需要切换
+  if (!_ready_to_send(top_connection) || _selected_connection == top_connection) {
+    return nullptr;
+  }
+
+  if (!_selected_connection){
+    return top_connection;
+  }
+  //最优的connection rtt有所提升则切换
+  if(top_connection->rtt() <= _selected_connection->rtt() - k_min_improvement){ 
+    return top_connection;
+  }
+  return nullptr;
 }
 
 }  // namespace grtc

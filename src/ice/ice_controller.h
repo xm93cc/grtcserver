@@ -27,9 +27,12 @@ class IceController {
 
   PingResult selected_connection_to_ping(int64_t last_ping_sent_ms);
 
+  //排序connection 并选出最优的connection
   IceConnection* sort_and_switch_connection();    
 
   int _compare_connections(IceConnection* a, IceConnection* b);
+
+  void set_selected_connection(IceConnection* conn) { _selected_connection = conn; }
 
  private:
   bool _weak() {
@@ -45,6 +48,9 @@ class IceController {
   int _get_connection_ping_interval(const IceConnection* conn , int64_t now_ms);
 
   bool _more_pingable(IceConnection* conn1, IceConnection* conn2);
+  
+  //connection 是否具备通信条件
+  bool _ready_to_send(IceConnection* conn);
 
  private:
   IceTransportChannel* _ice_channel;

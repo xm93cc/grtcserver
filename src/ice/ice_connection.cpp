@@ -201,7 +201,7 @@ std::string IceConnection::to_string() {
 uint64_t IceConnection::priority() {
   uint32_t g = local_candidate().priority;
   uint32_t d = remote_candidate().priority;
-  uint32_t priority = std::min(g, d);
+  uint64_t priority = std::min(g, d);
   priority = priority << 32;
   return priority + 2 * std::max(g, d) + (g > d ? 1 : 0);
 }

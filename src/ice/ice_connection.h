@@ -100,6 +100,10 @@ public:
 
     int rtt(){return _rtt;}
 
+    bool selected() { return _selected; }
+
+    void set_selected(bool val) { _selected = val; }
+
 private:
     void _on_stun_send_packet(StunRequest* request, const char* data, size_t len);
 
@@ -118,6 +122,7 @@ private:
     int64_t _last_data_received = 0;
     int _rtt = 3000;
     int _rtt_samples = 0;
+    bool _selected = false;
     
 };
 } // namespace grtc
