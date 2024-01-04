@@ -30,8 +30,10 @@ bool StunRequestManager::check_response(StunMessage* msg){
     }else{
         RTC_LOG(LS_WARNING) << "Received STUN binding response with wrong type =  "
         << msg->type() << ", id="<< rtc::hex_encode(msg->transaction_id());
+        delete request;
         return false;
     }
+    delete request;
     return true;
 }
 
@@ -39,7 +41,13 @@ StunRequest::StunRequest(StunMessage* request) : _msg(request) {
     _msg->set_transaction_id(rtc::CreateRandomString(k_stun_transaction_id_length));
 }
 
-StunRequest::~StunRequest(){}
+StunRequest::~StunRequest(){
+    if(_manager){
+        _manager->remove(this);
+    }
+    delete _msg;
+    _msg = nullptr;
+}
 
 void StunRequest::construct(){
     prepare(_msg);
@@ -56,4 +64,19 @@ void StunRequest::send(){
 
 }
 int StunRequest::elapsed() { return rtc::TimeMillis() - _ts; }
+
+void StunRequestManager::remove(StunRequest* request) {
+  auto iter = _requests.find(request->id());
+  if (iter != _requests.end()) {
+    _requests.erase(iter);
+  }
+}
+
+StunRequestManager::~StunRequestManager() {
+    while(_requests.begin() != _requests.end()){
+        StunRequest* request = _requests.begin()->second;
+        _requests.erase(_requests.begin());
+        delete request;
+    }
+}
 }  // namespace grtc

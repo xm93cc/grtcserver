@@ -104,6 +104,8 @@ public:
 
     void set_selected(bool val) { _selected = val; }
 
+    void fail_and_destroy();
+
 private:
     void _on_stun_send_packet(StunRequest* request, const char* data, size_t len);
 

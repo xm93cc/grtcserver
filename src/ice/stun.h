@@ -46,7 +46,9 @@ enum StunAttributeValueType{
 enum StunErrorCode{
   STUN_ERROR_BAD_REQUEST = 400,
   STUN_ERROR_UNAUTHORIZED = 401,
+  STUN_ERROR_UNKNOWN_ATTRIBUTE = 420,
   STUN_ERROR_SERVER_ERROR = 500,
+  STUN_ERROR_GLOBAL_FALL = 600,
 };
 
 enum StunAddressFamily{
@@ -123,6 +125,10 @@ class StunMessage {
     }
 
     void add_attribute(std::unique_ptr<StunAttribute> attr);
+
+    const StunErrorCodeAttribute* get_error_code();
+    
+    int get_error_code_value();
   
   
   private:
@@ -295,6 +301,8 @@ class StunErrorCodeAttribute : public StunAttribute {
   bool read(rtc::ByteBufferReader* buf) override;
 
   bool write(rtc::ByteBufferWriter* buf) override;
+
+  int code() const;
 
  private:
   uint8_t _class;

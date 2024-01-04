@@ -13,13 +13,15 @@ class StunRequestManager {
  public:
   StunRequestManager() = default;
  
-  ~StunRequestManager() = default;
+  ~StunRequestManager();
 
   void send(StunRequest* request);
  
   bool check_response(StunMessage* msg);
 
   sigslot::signal3<StunRequest*, const char*, size_t> signal_send_packet;
+
+  void remove(StunRequest* request);
 
  private:
   typedef std::map<std::string, StunRequest*> RequestMap;

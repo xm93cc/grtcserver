@@ -376,6 +376,19 @@ namespace grtc
         return true;
     }
 
+    const StunErrorCodeAttribute* StunMessage::get_error_code(){
+        return static_cast<const StunErrorCodeAttribute*>(_get_attribute(STUN_ATTR_ERROR_CODE));
+    }
+
+    int StunErrorCodeAttribute::code() const {
+        return _class * 100 + _number;
+    }
+    
+    int StunMessage::get_error_code_value(){
+        auto error_attr = get_error_code();
+        return error_attr ? error_attr->code() : STUN_ERROR_GLOBAL_FALL;
+    }
+
     bool StunMessage::add_message_integrity(const std::string& password){
         return _add_message_integrity_of_type(STUN_ATTR_MESSAGE_INTEGRITY, k_stun_message_integrity_size,
         password.c_str(), password.size());

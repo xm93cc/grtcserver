@@ -177,7 +177,9 @@ void IceTransportChannel::_on_check_and_ping(){
   RTC_LOG(LS_WARNING) << "=========>> conn: " << result.conn
                       << ", ping interval: " << result.ping_interval;
   if (result.conn){
-     _ping_connection((IceConnection*)result.conn);
+     IceConnection* conn = (IceConnection*)result.conn;
+     _ping_connection(conn);
+     _ice_controller->mark_connection_pinged(conn);
   }
   if (_cur_ping_interval != result.ping_interval) {
     _cur_ping_interval = result.ping_interval;

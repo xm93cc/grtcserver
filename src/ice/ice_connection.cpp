@@ -60,8 +60,24 @@ void IceConnection::print_pings_since_last_response(std::string& pings,
   pings = ss.str();
 }
 
-void IceConnection::on_connection_request_error_response(ConnectionRequest* request, StunMessage* msg) {
+void IceConnection::fail_and_destroy() {
 
+}
+
+void IceConnection::on_connection_request_error_response(
+    ConnectionRequest* request, StunMessage* msg) {
+  int rtt = request->elapsed();
+  int error_code = msg->get_error_code_value();
+  RTC_LOG(LS_WARNING) << to_string()
+                      << ": Received: " << stun_method_to_string(msg->type())
+                      << ", id=" << rtc::hex_encode(msg->transaction_id())
+                      << ", rtt=" << rtt << ", code=" << error_code;
+  if (STUN_ERROR_UNAUTHORIZED == error_code || STUN_ERROR_UNKNOWN_ATTRIBUTE == error_code || STUN_ERROR_SERVER_ERROR == error_code){
+    // retry maybe recover
+  }else {
+    //失败 无法通过重试请求得以解决 ->  销毁IceConnection
+    fail_and_destroy();
+  }
 }
 
 int64_t IceConnection::last_received() {

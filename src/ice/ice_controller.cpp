@@ -183,4 +183,10 @@ IceConnection* IceController::sort_and_switch_connection() {
   return nullptr;
 }
 
+void IceController::mark_connection_pinged(IceConnection* conn){
+  if(conn && _pinged_connections.insert(conn).second){
+    _unpinged_connections.erase(conn);
+  }
+}
+
 }  // namespace grtc
