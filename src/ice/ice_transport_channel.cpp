@@ -143,6 +143,7 @@ void IceTransportChannel::_maybe_switch_selected_connection(IceConnection* conn)
 void IceTransportChannel::_switch_selected_connection(
     IceConnection* conn) {
   IceConnection* old_selected_connection = _selected_connection;
+  _selected_connection = conn;
   if (old_selected_connection) {
     old_selected_connection->set_selected(false);
     RTC_LOG(LS_INFO) << conn->to_string() << ": Previous connection: "
