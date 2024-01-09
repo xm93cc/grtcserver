@@ -55,7 +55,11 @@ private:
 
     void _on_connection_state_change(IceConnection* conn);
 
-    void _maybe_swtich_selected_connection(IceConnection* conn);
+    void _maybe_switch_selected_connection(IceConnection* conn);
+
+    void _switch_selected_connection(IceConnection* conn);
+
+    void _on_connection_destroyed(IceConnection* conn);
     
 private:
     EventLoop* _el;

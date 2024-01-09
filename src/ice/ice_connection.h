@@ -5,6 +5,7 @@
 #include "ice/stun.h"
 #include "ice/stun_request.h"
 #include "ice/ice_credentials.h"
+#include "ice/ice_connection_info.h"
 namespace grtc
 {
 class UDPPort;
@@ -90,8 +91,6 @@ public:
 
     int receiving_timeout();
 
-    sigslot::signal1<IceConnection*> singal_state_change;
-
     void set_write_state(WriteState state);
 
     WriteState write_state(){ return _write_state; }
@@ -106,8 +105,20 @@ public:
 
     void fail_and_destroy();
 
+    void set_state(IceCandidatePairState state);
+
+    IceCandidatePairState state() { return _state; }
+
+    void destroy();
+
 private:
     void _on_stun_send_packet(StunRequest* request, const char* data, size_t len);
+
+//signal def
+public:
+    sigslot::signal1<IceConnection*> singal_state_change;
+    sigslot::signal1<IceConnection*> signal_connnection_destroy;
+    
 
 private:
     EventLoop* _el;
@@ -125,6 +136,7 @@ private:
     int _rtt = 3000;
     int _rtt_samples = 0;
     bool _selected = false;
+    IceCandidatePairState _state = IceCandidatePairState::WAITING;
     
 };
 } // namespace grtc

@@ -36,6 +36,8 @@ class IceController {
 
   void mark_connection_pinged(IceConnection* conn);
   
+  void on_connection_destroyed(IceConnection* conn);
+  
  private:
   bool _weak() {
     return _selected_connection == nullptr || _selected_connection->weak();
