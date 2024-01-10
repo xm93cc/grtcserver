@@ -43,7 +43,7 @@ class IceController {
     return _selected_connection == nullptr || _selected_connection->weak();
   }
 
-  bool _is_pingable(IceConnection* conn);
+  bool _is_pingable(IceConnection* conn, int64_t now_m);
 
   const IceConnection* _find_next_pingable_connection(int64_t now_ms);
 

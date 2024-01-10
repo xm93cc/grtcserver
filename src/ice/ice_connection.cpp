@@ -134,6 +134,7 @@ void IceConnection::received_ping_response(int rtt) {
   }else{
     _rtt = rtt;
   }
+  ++_rtt_samples;
   _last_ping_response_received = rtc::TimeMillis();
   //一旦收到成功的ping响应之后清理缓存
   _pings_since_last_response.clear();
@@ -285,11 +286,21 @@ void IceConnection::maybe_set_remote_ice_params(const IceParameters& params) {
 }
 
 bool IceConnection::stable(int64_t now) const {
-  //todo
-  return false;
+  return _rtt_samples > RTT_RATIO + 1 && !_miss_responese(now);
 }
 
+bool IceConnection::_miss_responese(int64_t now_ms) const {
+  if (_pings_since_last_response.empty()){
+    return false;
+  }
+
+  int waiting = now_ms - _pings_since_last_response[0].sent_time;//最早发送ping的时间
+  return waiting > 2 * _rtt;
+}
+
+
 void IceConnection::ping(int64_t now_ms) {
+  _last_ping_sent = now_ms;
   ConnectionRequest* request = new ConnectionRequest(this);
   _pings_since_last_response.push_back(SentPing(request->id(), now_ms));
   RTC_LOG(LS_INFO) << to_string() << ": Sending STUN ping, id="
