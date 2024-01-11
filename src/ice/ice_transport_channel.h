@@ -60,6 +60,9 @@ private:
     void _switch_selected_connection(IceConnection* conn);
 
     void _on_connection_destroyed(IceConnection* conn);
+
+    //连接探活
+    void _update_connection_state();
     
 private:
     EventLoop* _el;

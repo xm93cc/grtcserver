@@ -182,9 +182,17 @@ void IceTransportChannel::_maybe_start_pinging(){
 
 }
 
+void IceTransportChannel::_update_connection_state(){
+     std::vector<IceConnection*> connections = _ice_controller->connectios();
+     int64_t now = rtc::TimeMillis();
+     for (auto conn : connections){
+          conn->update_state(now);
+     }
+}
 
 
 void IceTransportChannel::_on_check_and_ping(){
+  _update_connection_state();
   auto result = _ice_controller->selected_connection_to_ping(_last_ping_sent_ms - PING_INTERVAL_DIFF);
   RTC_LOG(LS_WARNING) << "=========>> conn: " << result.conn
                       << ", ping interval: " << result.ping_interval;

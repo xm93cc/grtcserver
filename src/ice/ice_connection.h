@@ -111,10 +111,16 @@ public:
 
     void destroy();
 
+    void update_state(int64_t ms);
+
 private:
     void _on_stun_send_packet(StunRequest* request, const char* data, size_t len);
 
     bool _miss_responese(int64_t now_ms) const;
+    
+    bool _too_many_ping_fails(size_t max_pings, int rtt, int64_t now_ms);
+    
+    bool _too_long_without_response(int min_time, int64_t now);
 //signal def
 public:
     sigslot::signal1<IceConnection*> singal_state_change;

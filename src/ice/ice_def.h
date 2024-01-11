@@ -12,6 +12,9 @@ namespace grtc
     extern const int STABLING_CONNECTION_PING_INTERVAL;
     extern const int STABLE_CONNECTION_PING_INTERVAL;
     extern const int WEAK_CONNECTION_RECEIVE_TIMEOUT;
+    extern const int CONNECTION_WRITE_CONNECT_FAILS;
+    extern const int CONNECTION_WRITE_CONNECT_TIMEOUT;
+    extern const int CONNECTION_WRITE_TIMEOUT;
     enum IceCandidateComponent{
         RTP = 1,
         RTCP = 2
