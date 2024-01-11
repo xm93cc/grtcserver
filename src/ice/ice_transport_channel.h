@@ -40,6 +40,10 @@ public:
     
     std::string to_string();
 
+    sigslot::signal1<IceTransportChannel*> signal_writable_state;
+
+    sigslot::signal1<IceTransportChannel*> signal_receiving_state;
+
 private:
     void _sort_connections_and_update_state();
     
@@ -63,6 +67,12 @@ private:
 
     //连接探活
     void _update_connection_state();
+
+    void _update_state();
+
+    void _set_writable(bool writable);
+
+    void _set_receiving(bool receiving);
     
 private:
     EventLoop* _el;
@@ -78,6 +88,8 @@ private:
     int64_t _last_ping_sent_ms = 0;
     int64_t _cur_ping_interval = WEAK_PING_INTERVAL;
     IceConnection* _selected_connection = nullptr;
+    bool _writable = false;
+    bool _receiving = false;
 };
     
 } // namespace grtc
