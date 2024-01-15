@@ -11,7 +11,7 @@ DtlsTransport::~DtlsTransport() {
     //temp none
 }
 
-void DtlsTransport::_on_read_packet(IceTransportChannel* /*channel*/, const char* buf, size_t len, int64_t ts){
+void DtlsTransport::_on_read_packet(IceTransportChannel* /*channel*/, const char* /*buf*/, size_t len, int64_t /*ts*/){
     RTC_LOG(LS_INFO) << "============DTLS: packet: " << len;
 }
 

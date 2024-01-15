@@ -74,7 +74,7 @@ namespace grtc
         }
     }
 
-    StunAttribute *StunAttribute::create(StunAttributeValueType value_type, uint16_t type, uint16_t length, void *owner)
+    StunAttribute *StunAttribute::create(StunAttributeValueType value_type, uint16_t type, uint16_t length, void * /*owner*/)
     {
         switch (value_type)
         {
@@ -134,7 +134,7 @@ namespace grtc
 
   }
 
-    bool StunAddressAttribute::read(rtc::ByteBufferReader* buf){
+    bool StunAddressAttribute::read(rtc::ByteBufferReader* /*buf*/){
         return true;
     }
 
@@ -635,7 +635,7 @@ namespace grtc
       set_length(MIN_SIZE + reason.size());
     }
 
-    bool StunErrorCodeAttribute::read(rtc::ByteBufferReader* buf){
+    bool StunErrorCodeAttribute::read(rtc::ByteBufferReader* /*buf*/){
         //todo
         return false;
     }

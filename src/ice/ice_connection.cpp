@@ -48,8 +48,8 @@ const Candidate& IceConnection::local_candidate() const{
 void IceConnection::print_pings_since_last_response(std::string& pings,
                                                     int max) {
   std::stringstream ss;
-  if (_pings_since_last_response.size() > max) {
-    for (size_t i = 0; i < max; i++) {
+  if (_pings_since_last_response.size() > (size_t)max) {
+    for (size_t i = 0; i < (size_t)max; i++) {
       ss << rtc::hex_encode(_pings_since_last_response[i].id) << " ";
     }
     ss << "... " << _pings_since_last_response.size() - max << " more";

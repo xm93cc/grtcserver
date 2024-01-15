@@ -312,7 +312,7 @@ namespace grtc
         return 0;
     }
 
-    int SignalingWorker::_process_answer(int cmdno, TcpConnection *c, const Json::Value &root, uint32_t log_id)
+    int SignalingWorker::_process_answer(int cmdno, TcpConnection * /*c*/, const Json::Value &root, uint32_t log_id)
     {
         uint64_t uid;
         std::string stream_name;

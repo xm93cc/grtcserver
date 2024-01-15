@@ -22,8 +22,8 @@ PeerConnection::PeerConnection(EventLoop *el, PortAllocator *allocator)
         this, &PeerConnection::on_candidate_allocate_done);
 }
 void PeerConnection::on_candidate_allocate_done(
-    TransportController *peer_connection, const std::string &transport_name,
-    IceCandidateComponent component, const std::vector<Candidate> &candidates) {
+    TransportController * /*peer_connection*/, const std::string &transport_name,
+    IceCandidateComponent /*component*/, const std::vector<Candidate> &candidates) {
     for (auto c : candidates) {
         RTC_LOG(LS_INFO) << "candidate gathered, transport_name: "
                          << transport_name << ", " << c.to_string();
