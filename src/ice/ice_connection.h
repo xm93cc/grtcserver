@@ -125,6 +125,7 @@ private:
 public:
     sigslot::signal1<IceConnection*> singal_state_change;
     sigslot::signal1<IceConnection*> signal_connnection_destroy;
+    sigslot::signal4<IceConnection*, const char*, size_t, int64_t> signal_read_packet;
     
 
 private:

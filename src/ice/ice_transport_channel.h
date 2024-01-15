@@ -24,7 +24,7 @@ public:
     
     virtual ~IceTransportChannel();
     
-    std::string transport_name() {return _transport_name;}
+    std::string& transport_name() {return _transport_name;}
     
     IceCandidateComponent component() {return _component;}
     
@@ -34,15 +34,16 @@ public:
     
     void set_remote_ice_params(const IceParameters& ice_params);
     
-    sigslot::signal2<IceTransportChannel*, const std::vector<Candidate>&> signal_candidate_allocate_done;
-    
     void _on_unknown_address(UDPPort* port, const rtc::SocketAddress& addr,StunMessage* msg,const std::string& remote_ufrag);
     
     std::string to_string();
 
+//signal def
+public:
     sigslot::signal1<IceTransportChannel*> signal_writable_state;
-
     sigslot::signal1<IceTransportChannel*> signal_receiving_state;
+    sigslot::signal2<IceTransportChannel*, const std::vector<Candidate>&> signal_candidate_allocate_done;
+    sigslot::signal4<IceTransportChannel*, const char*, size_t, int64_t> signal_read_packet;
 
 private:
     void _sort_connections_and_update_state();
@@ -74,6 +75,8 @@ private:
 
     void _set_receiving(bool receiving);
     
+    void _on_read_packet(IceConnection* conn, const char* buf, size_t len, int64_t ts);
+
 private:
     EventLoop* _el;
     PortAllocator* _allocator;

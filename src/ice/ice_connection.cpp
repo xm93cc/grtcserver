@@ -246,6 +246,7 @@ void IceConnection::on_read_packet(const char* buf, size_t len, uint64_t ts) {
   if (!_port->get_stun_message(buf, len, remote.address, &stun_msg,
                                &remote_ufrag)) {
     //不是stun包 可能是dtls和rtp包
+    signal_read_packet(this, buf, len, ts);
   } else if (!stun_msg) {
   } else {
     switch (stun_msg->type()) {
