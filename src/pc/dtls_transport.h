@@ -67,6 +67,8 @@ public:
 
     bool is_dtls_packet(const char* buf, size_t len);
 
+    bool set_local_certificate(rtc::RTCCertificate* cert);
+
 private:
     void _on_read_packet(IceTransportChannel* channel, const char* buf, size_t len, int64_t ts);
 
@@ -85,6 +87,7 @@ private:
     StreamInterfaceChannel* _downward = nullptr;
     std::string _remote_fingerprint_alg;
     rtc::Buffer _remote_fingerprint_value;
+    bool _dtls_active = false;
 
 };
 } // namespace grtc

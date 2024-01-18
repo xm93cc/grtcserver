@@ -69,6 +69,27 @@ std::string DtlsTransport::to_string() {
   return ss.str();
 }
 
+
+bool DtlsTransport::set_local_certificate(rtc::RTCCertificate* cert){
+    if(_dtls_active){
+        if(cert == _local_certificate){
+            RTC_LOG(LS_INFO) << to_string() << ": Ingnoring identical DTLS cert";
+            return true;
+        }else{
+            //方法可重复调用 一但之前有设置cert 则不再更改 DtlsTransport中的cert
+            RTC_LOG(WARNING) << to_string() << ": Cannot change cert in this state";
+            return false;
+        }
+    }
+
+    if (cert){
+        _local_certificate = cert;
+        _dtls_active = true;
+    }
+    return true;
+
+}
+
 bool DtlsTransport::_setup_dtls() {
     auto downward = std::make_unique<StreamInterfaceChannel>(_ice_channel);
     StreamInterfaceChannel* downward_ptr = downward.get();

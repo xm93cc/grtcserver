@@ -78,6 +78,7 @@ std::string PeerConnection::create_offer(const RTCOfferAnswerOptions &options) {
 
 int PeerConnection::init(rtc::RTCCertificate *certificate) {
     _certificate = certificate;
+    _transport_controller->set_local_certificate(certificate);
     return 0;
 }
 

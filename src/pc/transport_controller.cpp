@@ -47,6 +47,7 @@ int TransportController::set_local_description(SessionDescription* desc)
         }
         
         DtlsTransport* dtls = new DtlsTransport(_ice_agent->get_channel(mid, IceCandidateComponent::RTP));
+        dtls->set_local_certificate(_certificate);
         _add_dtls_transport(dtls);
     }
     _ice_agent->gathering_candidate();
@@ -77,4 +78,8 @@ void TransportController::_add_dtls_transport(DtlsTransport* dtls_transport) {
   }
   _dtls_transport_by_name[dtls_transport->transport_name()] = dtls_transport;
 }
+
+ void TransportController::set_local_certificate(rtc::RTCCertificate* cert){
+    _certificate = cert;
+ }
 } // namespace grtc

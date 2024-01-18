@@ -24,16 +24,21 @@ public:
 
     sigslot::signal4<TransportController*, const std::string&, IceCandidateComponent, const std::vector<Candidate>&> signal_candidate_allocate_done;
 
+    void set_local_certificate(rtc::RTCCertificate* cert);
+
 private:
     void on_candidate_allocate_done(IceAgent* agent, const std::string& transport_name,
                                     IceCandidateComponent component, const std::vector<Candidate>& candidates);
     
     void  _add_dtls_transport(DtlsTransport* dtls_transport);
 
+ 
+
 private:
     EventLoop* _el;
     IceAgent* _ice_agent;
     std::map<std::string, DtlsTransport*> _dtls_transport_by_name;
+    rtc::RTCCertificate* _certificate = nullptr;
     
 };
 } // namespace grtc
